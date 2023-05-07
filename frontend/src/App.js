@@ -1,11 +1,17 @@
 import './App.css';
+import axios from 'axios';
 
 function App() {
+
+  async function backendCall() {
+    const response = await axios.get('http://localhost:5000/');
+
+    console.log(response.data);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Hello World from React</h1>
-      </header>
+      <button onClick={backendCall}>Fetch Hello</button>
     </div>
   );
 }
