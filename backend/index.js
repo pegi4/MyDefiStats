@@ -114,10 +114,14 @@ app.get('/tokenBalances', async (req, res) => {
 
       if (price && price > 0.01) {
         tokens[i].usd = price;
+        
+        tokens[i].eur = tokens[i].usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
+
         legitTokens.push(tokens[i]);
       } else {
         console.log("Poo coin");
       }
+
     }
 
     res.send(legitTokens);
