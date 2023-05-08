@@ -132,3 +132,23 @@ app.get('/tokenBalances', async (req, res) => {
     console.log(error);
   }
 });
+
+// Transactions
+app.get('/tokenTransfers', async (req, res) => {
+  try {
+    const { address, chain } = req.query;
+
+    const response = await Moralis.EvmApi.token.getWalletTokenTransfers({
+      address: address,
+      chain: chain,
+    });
+
+    const userTrans = response.jsonResponse;
+
+    console.log(userTrans);
+    res.send(userTrans);
+
+  } catch (error) {
+    console.log(error);
+  }
+});
