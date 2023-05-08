@@ -19,6 +19,7 @@ app.listen(port, () => {
 
 Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
 
+// Fetch Native Balance
 app.get('/nativeBalance', async (req, res) => {
 
   //await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
@@ -78,3 +79,52 @@ app.get('/nativeBalance', async (req, res) => {
   }
 
 })
+
+// CoinGecko API Token Price
+async function getTokenPrice(contract_address, chain) {
+  const platform = chain === '0x38' ? 'binance-smart-chain' : chain === '0x89' ? 'polygon-pos' : 'ethereum';
+
+  const url = `https://api.coingecko.com/api/v3/simple/token_price/${platform}?contract_addresses=${contract_address}&vs_currencies=usd`;
+
+  try {
+    const response = await axios.get(url);
+    return response.data[contract_address.toLowerCase()]?.usd;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Fetch Token Balance
+app.get('/tokenBalances', async (req, res) => {
+  try {
+    const { address, chain } = req.query;
+
+    const response = await Moralis.EvmApi.token.getWalletTokenBalances({
+      address: address,
+      chain: chain,
+    });
+
+    let tokens = response.jsonResponse;
+
+    let legitTokens = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+      const price = await getTokenPrice(tokens[i].token_address, chain);
+
+      if (price && price > 0.01) {
+        tokens[i].usd = price;
+        legitTokens.push(tokens[i]);
+      } else {
+        console.log("Poo coin");
+      }
+    }
+
+    res.send(legitTokens);
+    console.log("All Tokens: ", tokens);
+    console.log("Legit Tokens: ", legitTokens);
+
+  } catch (error) {
+    console.log(error);
+  }
+});
