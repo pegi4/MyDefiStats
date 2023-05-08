@@ -9,6 +9,7 @@ function App() {
   const [chain, setChain] = useState("0x1");
   const [nativeBalance, setNativeBalance] = useState(0);
   const  [nativeValue, setNativeValue] = useState(0);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
   return (
     <div className="App">
@@ -25,6 +26,8 @@ function App() {
         setNativeBalance={setNativeBalance}
         nativeValue={nativeValue}
         setNativeValue={setNativeValue}
+        selectedCurrency={selectedCurrency}
+        setSelectedCurrency={setSelectedCurrency}
       />
     </div>
   );

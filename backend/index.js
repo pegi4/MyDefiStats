@@ -69,6 +69,8 @@ app.get('/nativeBalance', async (req, res) => {
 
     */
 
+    console.log('nativeBalance:', nativeBalance);
+
     res.send(nativeBalance)
 
   }catch(error){

@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 
-function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue}) {
+function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue, selectedCurrency, setSelectedCurrency}) {
 
   async function getNativeBalance() {
 
@@ -14,7 +14,12 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
 
     if(response.data.balance && response.data.usd && response.data.eur){
       setNativeBalance((Number(response.data.balance) / 1e18).toFixed(3));
-      setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.usd)).toFixed(2));
+
+      if(selectedCurrency === "USD") {
+        setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.usd)).toFixed(2));
+      } else if(selectedCurrency === "EUR") {
+          setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.eur)).toFixed(2));
+      }
     }
 
   }
@@ -25,8 +30,13 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
       <p>
         <button onClick={getNativeBalance}>Fetch Tokens</button>
         <br />
+        <select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+        <br />
         <span>
-          Native Balance: {nativeBalance}, (${nativeValue})
+          Native Balance: {nativeBalance}, {selectedCurrency === "USD" ? "$ " : "€ "}{nativeValue}
         </span>
       </p>
     </>
