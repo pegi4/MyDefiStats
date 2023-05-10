@@ -135,7 +135,9 @@ app.get('/tokenBalances', async (req, res) => {
 
 // Transactions
 app.get('/tokenTransfers', async (req, res) => {
+
   try {
+
     const { address, chain } = req.query;
 
     const response = await Moralis.EvmApi.token.getWalletTokenTransfers({
@@ -143,10 +145,35 @@ app.get('/tokenTransfers', async (req, res) => {
       chain: chain,
     });
 
+    
     const userTrans = response.jsonResponse;
 
-    console.log(userTrans);
-    res.send(userTrans);
+    //console.log(userTrans.result.address);
+    //res.send(userTrans.result);
+    
+    let userTransDetails = [];
+
+    for (let i = 0; i < userTrans.result.length; i++) {
+
+      const metaResponse = await Moralis.EvmApi.token.getTokenMetadata({
+        addresses: [userTrans.result[i].address],
+        chain: chain,
+      });
+
+      //console.log(`Token address: ${userTrans.result[i].address}`);
+      //console.log(metaResponse);
+
+      if(metaResponse.jsonResponse) {
+        userTrans.result[i].decimals = metaResponse.jsonResponse[0].decimals;
+        userTrans.result[i].symbol = metaResponse.jsonResponse[0].symbol;
+        userTransDetails.push(userTrans.result[i]);
+      } else {
+        console.log("No details for coin");
+      }
+    } 
+
+    console.log(userTransDetails);
+    res.send(userTransDetails);
 
   } catch (error) {
     console.log(error);
