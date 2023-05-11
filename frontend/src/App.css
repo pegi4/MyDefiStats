@@ -17,6 +17,7 @@
 .title {
   display: flex;
   height: 60px;
+  width: 100%;
   align-items: center;
   gap: 25px;
 }

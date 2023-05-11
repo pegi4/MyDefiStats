@@ -1,6 +1,6 @@
 import React from 'react'
 import "../App.css"
-import {Input, Select, CryptoLogos} from '@web3uikit/web3'
+import {Input, Select, CryptoLogos} from '@web3uikit/core'
 
 function WalletInputs({chain, setChain, wallet, setWallet}) {
   return (
@@ -12,6 +12,18 @@ function WalletInputs({chain, setChain, wallet, setWallet}) {
             <path id="logo_interior" fill-rule="evenodd" clip-rule="evenodd" d="M154.338 187.869L330.605 187L288.404 250.6L388 250.118L345.792 312.652L168.382 313.787L211.25 250.633L112 250.595L154.338 187.869Z" fill="white"></path>
             </svg>
             <h1>My Defi Stats</h1>
+          </div>
+          <div className='walletInputs'>
+            <Input 
+              id="wallet"
+              label="Wallet Address"
+              placeholder="0x..."
+              labelBgColor="rgb(33, 33, 38)"
+              style={{height: "50x"}}
+              value={wallet}
+              onChange={(e) => setWallet(e.target.value)}
+            />
+            
           </div>
         </div>
     </>
