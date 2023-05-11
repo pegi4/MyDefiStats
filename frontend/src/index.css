@@ -13,3 +13,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.bHsVgM :first-child {
+  width: 90% !important;
+}
+
+.hkbjFy {
+  background-color: rgb(33, 33, 38) !important;
+}
+
+.bqsWMK{
+  background-color: rgba(33, 33, 38, 0.95) !important;
+  color: white !important;
+  font-size: 15px !important;
+  font-weight: bold !important;
+}

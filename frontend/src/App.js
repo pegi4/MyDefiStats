@@ -6,13 +6,14 @@ import Tokens from './components/Tokens';
 import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
 import Nfts from './components/Nfts';
+import { Avatar, TabList, Tab } from '@web3uikit/core';
 
 function App() {
 
   const [wallet, setWallet] = useState("");
   const [chain, setChain] = useState("0x1");
   const [nativeBalance, setNativeBalance] = useState(0);
-  const  [nativeValue, setNativeValue] = useState(0);
+  const [nativeValue, setNativeValue] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [tokens, setTokens] = useState([]);
   const [transfers, setTransfers] = useState([]);

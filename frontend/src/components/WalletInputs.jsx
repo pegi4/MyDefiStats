@@ -23,7 +23,26 @@ function WalletInputs({chain, setChain, wallet, setWallet}) {
               value={wallet}
               onChange={(e) => setWallet(e.target.value)}
             />
-            
+            <Select
+              defaultOptionIndex={0}
+              id="Chain"
+              onChange={(e) => setChain(e.value)}
+              options={[
+                { 
+                  id: "eth",
+                  value: "0x1",
+                  label: "Ethereum",
+                  prefix: <CryptoLogos chain="ethereum" />,
+                },
+                {
+                  id: "bsc",
+                  value: "0x38",
+                  label: "Binance Smart Chain",
+                  prefix: <CryptoLogos chain="binance" />,
+                },
+              ]}
+            />
+
           </div>
         </div>
     </>
