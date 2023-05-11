@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import { Table } from '@web3uikit/core';
+import { Reload } from '@web3uikit/icons';
 
 function Tokens({chain, wallet, tokens, setTokens}) {
 
@@ -25,6 +27,30 @@ function Tokens({chain, wallet, tokens, setTokens}) {
 
   return (
     <>
+        <div className="tabHeading"> Tokens  <Reload onClick={getTokenBalances} /> </div>
+        {tokens.length > 0 && (
+            <Table 
+                pageSize={6}
+                noPagination="true"
+                style={{ width: '900px' }}
+                columnsConfig='300px 300px 250px'
+                data={tokens.map((e) => [e.symbol, e.bal, `$ ${e.val}`])}
+                header={[
+                    <span>Token</span>,
+                    <span>Balance</span>,
+                    <span>Value</span>
+                ]}
+            />
+        )}
+    </>
+  )
+}
+
+export default Tokens
+
+
+/* return (
+    <>
         <p>
             <button onClick={getTokenBalances}>Get Tokens</button>
             <br />
@@ -44,4 +70,4 @@ function Tokens({chain, wallet, tokens, setTokens}) {
   )
 }
 
-export default Tokens
+export default Tokens */

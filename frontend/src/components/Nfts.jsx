@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react';
+import { Input } from '@web3uikit/core';
+import { Reload } from '@web3uikit/icons';
 
 function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 
@@ -72,6 +74,49 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 
   return (
     <>
+        <div className='tabHeading'>
+            NFT Portfolio <Reload onClick={getUserNfts} />
+        </div>
+
+        <div className='filters'>
+            <Input 
+                id="NameF"
+                label="Name Filter"
+                labelBgColor="rgb(33, 33, 38)"
+                value={nameFilter}
+                style={{}}
+                onChange={(e) => setNameFilter(e.target.value)}
+            />
+            <Input 
+                id="IdF"
+                label="Id Filter"
+                labelBgColor="rgb(33, 33, 38)"
+                value={idFilter}
+                style={{}}
+                onChange={(e) => setIdFilter(e.target.value)}
+            />
+        </div>
+        <div className='nftList'>
+                {filteredNfts.length > 0 && filteredNfts.map((e) => {
+                    return (
+                        <>
+                            <div className='nftInfo'>
+                                {e.image && <img src={e.image} width={200} alt={e.name} />}
+                                <div>Name: {e.name}, </div>
+                                <div>ID: {e.token_id.slice(0,5)}</div>
+                            </div>
+                        </>
+                    )
+                })}
+            </div>
+    </>
+  )
+}
+
+export default Nfts
+
+/*   return (
+    <>
         <h1>Porfolio NFTs</h1>
         <div>
 
@@ -101,7 +146,4 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
             })}
         </div>
     </>
-  )
-}
-
-export default Nfts
+  ) */

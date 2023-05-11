@@ -28,40 +28,51 @@ function App() {
         wallet={wallet}
         setWallet={setWallet}
       />
-      <NativeTokens
-        wallet={wallet}
-        chain={chain}
-        nativeBalance={nativeBalance}
-        setNativeBalance={setNativeBalance}
-        nativeValue={nativeValue}
-        setNativeValue={setNativeValue}
-        selectedCurrency={selectedCurrency}
-        setSelectedCurrency={setSelectedCurrency}
-      />
-      <Tokens
-        wallet={wallet}
-        chain={chain}
-        tokens={tokens}
-        setTokens={setTokens}
-      />
-      <Porfolio
-        nativeValue={nativeValue}
-        tokens={tokens}
-      />
-      <TransferHistory
-        wallet={wallet}
-        chain={chain}
-        transfers={transfers}
-        setTransfers={setTransfers}
-      />
-      <Nfts
-        wallet={wallet}
-        chain={chain}
-        nfts={nfts}
-        setNfts={setNfts}
-        filteredNfts={filteredNfts}
-        setFilteredNfts={setFilteredNfts}
-      />
+
+      <div className="content">
+        <Porfolio
+          nativeValue={nativeValue}
+          tokens={tokens}
+        />
+        <TabList>
+          <Tab tabKey={1} tabName={"Tokens"}>
+            <NativeTokens
+              wallet={wallet}
+              chain={chain}
+              nativeBalance={nativeBalance}
+              setNativeBalance={setNativeBalance}
+              nativeValue={nativeValue}
+              setNativeValue={setNativeValue}
+              selectedCurrency={selectedCurrency}
+              setSelectedCurrency={setSelectedCurrency}
+            />
+            <Tokens
+              wallet={wallet}
+              chain={chain}
+              tokens={tokens}
+              setTokens={setTokens}
+            />
+          </Tab>
+          <Tab tabKey={2} tabName={"Transfers"}>
+            <TransferHistory
+              wallet={wallet}
+              chain={chain}
+              transfers={transfers}
+              setTransfers={setTransfers}
+            />
+          </Tab>
+          <Tab tabKey={3} tabName={"NFTs"}>
+            <Nfts
+              wallet={wallet}
+              chain={chain}
+              nfts={nfts}
+              setNfts={setNfts}
+              filteredNfts={filteredNfts}
+              setFilteredNfts={setFilteredNfts}
+            />
+          </Tab>
+        </TabList>
+      </div>
     </div>
   );
 }

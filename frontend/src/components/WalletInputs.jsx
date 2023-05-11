@@ -1,6 +1,6 @@
 import React from 'react'
 import "../App.css"
-import {Input, Select, CryptoLogos} from '@web3uikit/core'
+import { Input, Select, CryptoLogos } from '@web3uikit/core'
 
 function WalletInputs({chain, setChain, wallet, setWallet}) {
   return (
