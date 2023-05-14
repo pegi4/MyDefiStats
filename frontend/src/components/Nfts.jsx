@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
-import { useState, useEffect } from 'react';
 import { Input } from '@web3uikit/core';
 import { Reload } from '@web3uikit/icons';
 
@@ -41,23 +40,9 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 
     }, [nameFilter, idFilter, setFilteredNfts, nfts])
 
-    async function getUserNfts() {
-        const response = await axios.get("http://localhost:5000/nftBalance", {
-            params: {
-                address: wallet,
-                chain: chain,
-            }
-        });
-
-        if (response.data.result) {
-            nftProcessing(response.data.result);
-        }
-
-    }
-
-    function nftProcessing(t) {
+    const nftProcessing = useCallback((t) => {
         for(let i = 0; i < t.length; i++) {
-
+    
             let meta = JSON.parse(t[i].metadata);
             if(meta && meta.image) {
                 if(meta.image.includes(".")) {
@@ -66,13 +51,36 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
                     t[i].image = "https://ipfs.moralis.io:2053/ipfs/" + meta.image;
                 }
             }
-
+    
         }
         setNfts(t);
         setFilteredNfts(t);
-    }
+    }, [setNfts, setFilteredNfts]);
 
-  return (
+    const getUserNfts = useCallback(async () => {
+        const response = await axios.get("http://localhost:5000/nftBalance", {
+            params: {
+                address: wallet,
+                chain: chain,
+            }
+        });
+    
+        if (response.data.result) {
+            nftProcessing(response.data.result);
+        }
+    
+    }, [wallet, chain, nftProcessing]);
+    
+    useEffect(() => {
+        if (wallet) {
+            getUserNfts().catch((err) => {
+                console.error(err);
+            });
+        }
+    }, [wallet, chain, getUserNfts]);
+    
+    
+    return (
     <>
         <div className='tabHeading'>
             NFT Portfolio <Reload onClick={getUserNfts} />
@@ -114,36 +122,3 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 }
 
 export default Nfts
-
-/*   return (
-    <>
-        <h1>Porfolio NFTs</h1>
-        <div>
-
-            <button onClick={getUserNfts}>Get NFTs</button>
-            <span> Name Filter </span>
-              <input
-                onChange={(e) => setNameFilter(e.target.value)}
-                value={nameFilter}
-               />
-
-            <span> Id Filter </span>
-              <input
-                onChange={(e) => setIdFilter(e.target.value)}
-                value={idFilter}
-               />
-               
-            <br />
-            {filteredNfts.length > 0 && filteredNfts.map((e) => {
-                return (
-                    <>
-                    <span>Name: {e.name}, </span>
-                    <span>(ID: {e.token_id})</span>
-                    {e.image && <img src={e.image} alt={e.name} width={200} />}
-                    <br />
-                    </>
-                )
-            })}
-        </div>
-    </>
-  ) */

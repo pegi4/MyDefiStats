@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Table } from '@web3uikit/core';
-import { Reload } from '@web3uikit/icons';
 
 function Tokens({chain, wallet, tokens, setTokens}) {
 
-    async function getTokenBalances() {
+    const getTokenBalances = useCallback(async () => {
         const response = await axios.get("http://localhost:5000/tokenBalances", {
             params: {
                 address: wallet,
@@ -23,11 +22,19 @@ function Tokens({chain, wallet, tokens, setTokens}) {
 
             setTokens(t);
         }
-    }
+    }, [wallet, chain, setTokens]);
+
+    useEffect(() => {
+        if(wallet){
+            getTokenBalances().catch((err) => {
+                console.error(err);
+            });
+        }
+    }, [wallet, chain, getTokenBalances]);
 
   return (
     <>
-        <div className="tabHeading"> Tokens  <Reload onClick={getTokenBalances} /> </div>
+        <div className="tabHeading"> Tokens </div>
         {tokens.length > 0 && (
             <Table 
                 pageSize={6}
@@ -47,27 +54,3 @@ function Tokens({chain, wallet, tokens, setTokens}) {
 }
 
 export default Tokens
-
-
-/* return (
-    <>
-        <p>
-            <button onClick={getTokenBalances}>Get Tokens</button>
-            <br />
-            {tokens.length > 0 && tokens.map((e) => {
-                return (
-                    <>
-                    <span key={e.address}>
-                        {e.symbol} {e.bal}, (${e.val})
-                    </span>
-                    <br />
-                    </>
-                )
-            })}
-
-        </p>
-    </>
-  )
-}
-
-export default Tokens */

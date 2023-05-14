@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import axios from 'axios';
 import { Table } from '@web3uikit/core';
-import { Reload } from '@web3uikit/icons';
 
 function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue, selectedCurrency, setSelectedCurrency}) {
 
@@ -34,7 +33,7 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
 
   return (
     <>
-        <div className='tabHeading'>Native Balance <Reload onClick={getNativeBalance} /> </div>
+        <div className='tabHeading'>Native Balance </div>
         {(nativeBalance > 0 && nativeValue > 0) &&
           <Table
             pageSize={1}
@@ -54,25 +53,3 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
 }
 
 export default NativeTokens
-
-
-/* return (
-  <>
-    <h1>Fetch Tokens</h1>
-    <p>
-      <button onClick={getNativeBalance}>Fetch Tokens</button>
-      <br />
-      <select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-      </select>
-      <br />
-      <span>
-        Native Balance: {nativeBalance}, {selectedCurrency === "USD" ? "$ " : "€ "}{nativeValue}
-      </span>
-    </p>
-  </>
-)
-}
-
-export default NativeTokens */
