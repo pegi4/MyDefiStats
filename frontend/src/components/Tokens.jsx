@@ -1,8 +1,11 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Table } from '@web3uikit/core';
+import ReactLoading from "react-loading";
 
 function Tokens({chain, wallet, tokens, setTokens}) {
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const getTokenBalances = useCallback(async () => {
         const response = await axios.get("http://localhost:5000/tokenBalances", {
@@ -22,6 +25,8 @@ function Tokens({chain, wallet, tokens, setTokens}) {
 
             setTokens(t);
         }
+
+        setIsLoading(false);
     }, [wallet, chain, setTokens]);
 
     useEffect(() => {
@@ -35,20 +40,26 @@ function Tokens({chain, wallet, tokens, setTokens}) {
   return (
     <>
         <div className="tabHeading"> Tokens </div>
-        {tokens.length > 0 && (
-            <Table 
-                pageSize={6}
-                noPagination="true"
-                style={{ width: '900px' }}
-                columnsConfig='300px 300px 250px'
-                data={tokens.map((e) => [e.symbol, e.bal, `$ ${e.val}`])}
-                header={[
-                    <span>Token</span>,
-                    <span>Balance</span>,
-                    <span>Value</span>
-                ]}
-            />
-        )}
+        {isLoading ? 
+            (
+                <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
+            ) 
+        : tokens.length > 0 && 
+            (
+                <Table 
+                    pageSize={6}
+                    noPagination="true"
+                    style={{ width: '900px' }}
+                    columnsConfig='300px 300px 250px'
+                    data={tokens.map((e) => [e.symbol, e.bal, `$ ${e.val}`])}
+                    header={[
+                        <span>Token</span>,
+                        <span>Balance</span>,
+                        <span>Value</span>
+                    ]}
+                />
+            )
+        }
     </>
   )
 }

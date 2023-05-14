@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Input } from '@web3uikit/core';
-import { Reload } from '@web3uikit/icons';
 
 function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 
@@ -83,7 +82,7 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
     return (
     <>
         <div className='tabHeading'>
-            NFT Portfolio <Reload onClick={getUserNfts} />
+            NFT Portfolio
         </div>
 
         <div className='filters'>

@@ -1,8 +1,11 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios';
 import { Table } from '@web3uikit/core';
+import ReactLoading from "react-loading";
 
 function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue, selectedCurrency, setSelectedCurrency}) {
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const getNativeBalance = useCallback(async () => {
     const response = await axios.get("http://localhost:5000/nativeBalance", {
@@ -21,6 +24,7 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
           setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.eur)).toFixed(2));
       }
     }
+    setIsLoading(false);
   }, [wallet, chain, selectedCurrency, setNativeBalance, setNativeValue]);
 
   useEffect(() => {
@@ -34,19 +38,25 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
   return (
     <>
         <div className='tabHeading'>Native Balance </div>
-        {(nativeBalance > 0 && nativeValue > 0) &&
-          <Table
-            pageSize={1}
-            noPagination={true}
-            style={{ width: '900px' }}
-            columnsConfig='300px 300px 250px'
-            data={[["Native", nativeBalance, `$ ${nativeValue}`]]}
-            header={[
-              <span>Currency</span>,
-              <span>Balance</span>,
-              <span>Value</span>
-            ]}
-          />  
+        {isLoading ? 
+            (
+              <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
+            ) 
+        : nativeBalance > 0 && nativeValue > 0 &&
+            (
+              <Table
+                pageSize={1}
+                noPagination={true}
+                style={{ width: '900px' }}
+                columnsConfig='300px 300px 250px'
+                data={[["Native", nativeBalance, `$ ${nativeValue}`]]}
+                header={[
+                  <span>Currency</span>,
+                  <span>Balance</span>,
+                  <span>Value</span>
+                ]}
+              />  
+            )
         }
     </>
   )

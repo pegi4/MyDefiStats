@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Table } from '@web3uikit/core';
+import ReactLoading from "react-loading";
 
 function TransferHistory({chain, wallet, transfers, setTransfers}) {
     
@@ -21,7 +22,7 @@ function TransferHistory({chain, wallet, transfers, setTransfers}) {
             setTransfers(response.data);
         }
 
-        setIsLoading(false); // Set loading to false when finished loading
+        setIsLoading(false);
     }, [wallet, chain, setTransfers]);
 
     useEffect(() => {
@@ -37,7 +38,8 @@ function TransferHistory({chain, wallet, transfers, setTransfers}) {
             <div className="tabHeading"> Transfer History </div>
             <div>
             {isLoading ? (
-                <div>Loading...</div> // Replace this with your loading screen
+                <ReactLoading type="cylon" color="#687994"
+                    height={100} width={50} /> 
             ) : transfers.length > 0 ? (
                 <Table
                     pageSize={8}
