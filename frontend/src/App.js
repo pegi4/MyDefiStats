@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WalletInputs from './components/WalletInputs';
 import NativeTokens from './components/NativeTokens';
 import Tokens from './components/Tokens';
@@ -10,8 +10,8 @@ import { TabList, Tab } from '@web3uikit/core';
 
 function App() {
 
-  const [wallet, setWallet] = useState("");
-  const [chain, setChain] = useState("0x1");
+  const [wallet, setWallet] = useState(localStorage.getItem('wallet') || "");
+  const [chain, setChain] = useState(localStorage.getItem('chain') || "0x1");  
   const [nativeBalance, setNativeBalance] = useState(0);
   const [nativeValue, setNativeValue] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -19,8 +19,15 @@ function App() {
   const [transfers, setTransfers] = useState([]);
   const [nfts, setNfts] = useState([]);
   const [filteredNfts, setFilteredNfts] = useState([]);
-
   const [activeTab, setActiveTab] = useState(1);
+
+  useEffect(() => {
+    localStorage.setItem('wallet', wallet);
+  }, [wallet]);
+  
+  useEffect(() => {
+    localStorage.setItem('chain', chain);
+  }, [chain]);
 
   return (
     <div className="App">

@@ -81,14 +81,18 @@ app.get('/nativeBalance', async (req, res) => {
 })
 
 // CoinGecko API Token Price
-async function getTokenPrice(contract_address, chain) {
+async function getTokenPrice(contract_addresses, chain) {
   const platform = chain === '0x38' ? 'binance-smart-chain' : chain === '0x89' ? 'polygon-pos' : 'ethereum';
 
-  const url = `https://api.coingecko.com/api/v3/simple/token_price/${platform}?contract_addresses=${contract_address}&vs_currencies=usd`;
+  // Join the addresses with commas to form the query parameter
+  const contracts = contract_addresses.join(',');
+
+  const url = `https://api.coingecko.com/api/v3/simple/token_price/${platform}?contract_addresses=${contracts}&vs_currencies=usd`;
 
   try {
     const response = await axios.get(url);
-    return response.data[contract_address.toLowerCase()]?.usd;
+    // Return the whole response.data object instead of a single price
+    return response.data;
   } catch (error) {
     console.error(error);
     return null;
@@ -109,8 +113,15 @@ app.get('/tokenBalances', async (req, res) => {
 
     let legitTokens = [];
 
+    // Create an array of contract addresses
+    const contract_addresses = tokens.map(token => token.token_address);
+
+    // Call getTokenPrice once with all of the contract addresses
+    const prices = await getTokenPrice(contract_addresses, chain);
+
     for (let i = 0; i < tokens.length; i++) {
-      const price = await getTokenPrice(tokens[i].token_address, chain);
+      // Look up the price in the prices object
+      const price = prices[tokens[i].token_address.toLowerCase()]?.usd;
 
       if (price && price > 0.01) {
         tokens[i].usd = price;
@@ -121,7 +132,6 @@ app.get('/tokenBalances', async (req, res) => {
       } else {
         console.log("Poo coin");
       }
-
     }
 
     res.send(legitTokens);

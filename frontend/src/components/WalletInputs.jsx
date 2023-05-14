@@ -24,7 +24,7 @@ function WalletInputs({chain, setChain, wallet, setWallet}) {
               onChange={(e) => setWallet(e.target.value)}
             />
             <Select
-              defaultOptionIndex={0}
+              defaultOptionIndex={chain === "0x1" ? 0 : 1}
               id="Chain"
               onChange={(e) => setChain(e.value)}
               options={[
