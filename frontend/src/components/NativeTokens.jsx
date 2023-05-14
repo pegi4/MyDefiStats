@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useEffect, useCallback } from 'react'
 import axios from 'axios';
 import { Table } from '@web3uikit/core';
 import { Reload } from '@web3uikit/icons';
 
 function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue, selectedCurrency, setSelectedCurrency}) {
 
-  async function getNativeBalance() {
-
+  const getNativeBalance = useCallback(async () => {
     const response = await axios.get("http://localhost:5000/nativeBalance", {
       params: {
         address: wallet,
@@ -23,8 +22,15 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
           setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.eur)).toFixed(2));
       }
     }
+  }, [wallet, chain, selectedCurrency, setNativeBalance, setNativeValue]);
 
-  }
+  useEffect(() => {
+    if(wallet){
+      getNativeBalance().catch((err) => {
+        console.error(err);
+      });
+    }
+  }, [wallet, chain, selectedCurrency, getNativeBalance]);
 
   return (
     <>

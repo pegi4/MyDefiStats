@@ -6,7 +6,7 @@ import Tokens from './components/Tokens';
 import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
 import Nfts from './components/Nfts';
-import { Avatar, TabList, Tab } from '@web3uikit/core';
+import { TabList, Tab } from '@web3uikit/core';
 
 function App() {
 
@@ -19,6 +19,8 @@ function App() {
   const [transfers, setTransfers] = useState([]);
   const [nfts, setNfts] = useState([]);
   const [filteredNfts, setFilteredNfts] = useState([]);
+
+  const [activeTab, setActiveTab] = useState(1);
 
   return (
     <div className="App">
@@ -34,44 +36,58 @@ function App() {
           nativeValue={nativeValue}
           tokens={tokens}
         />
-        <TabList>
-          <Tab tabKey={1} tabName={"Tokens"}>
-            <NativeTokens
-              wallet={wallet}
-              chain={chain}
-              nativeBalance={nativeBalance}
-              setNativeBalance={setNativeBalance}
-              nativeValue={nativeValue}
-              setNativeValue={setNativeValue}
-              selectedCurrency={selectedCurrency}
-              setSelectedCurrency={setSelectedCurrency}
-            />
-            <Tokens
-              wallet={wallet}
-              chain={chain}
-              tokens={tokens}
-              setTokens={setTokens}
-            />
-          </Tab>
-          <Tab tabKey={2} tabName={"Transfers"}>
-            <TransferHistory
-              wallet={wallet}
-              chain={chain}
-              transfers={transfers}
-              setTransfers={setTransfers}
-            />
-          </Tab>
-          <Tab tabKey={3} tabName={"NFTs"}>
-            <Nfts
-              wallet={wallet}
-              chain={chain}
-              nfts={nfts}
-              setNfts={setNfts}
-              filteredNfts={filteredNfts}
-              setFilteredNfts={setFilteredNfts}
-            />
-          </Tab>
+
+        <TabList
+          onChange={(selectedKey) => {
+            console.log("Selected tab:", selectedKey);
+            setActiveTab(selectedKey);
+          }}
+        >
+          <Tab tabKey={1} tabName={"Tokens"} />
+          <Tab tabKey={2} tabName={"Transfers"} />
+          <Tab tabKey={3} tabName={"NFTs"} />
         </TabList>
+
+
+        {/* Render the components conditionally, but don't unmount them when not active */}
+        <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
+          <NativeTokens
+            wallet={wallet}
+            chain={chain}
+            nativeBalance={nativeBalance}
+            setNativeBalance={setNativeBalance}
+            nativeValue={nativeValue}
+            setNativeValue={setNativeValue}
+            selectedCurrency={selectedCurrency}
+            setSelectedCurrency={setSelectedCurrency}
+          />
+          <Tokens
+            wallet={wallet}
+            chain={chain}
+            tokens={tokens}
+            setTokens={setTokens}
+          />
+        </div>
+
+        <div style={{ display: activeTab === 2 ? 'block' : 'none' }}>
+          <TransferHistory
+            wallet={wallet}
+            chain={chain}
+            transfers={transfers}
+            setTransfers={setTransfers}
+          />
+        </div>
+
+        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
+          <Nfts
+            wallet={wallet}
+            chain={chain}
+            nfts={nfts}
+            setNfts={setNfts}
+            filteredNfts={filteredNfts}
+            setFilteredNfts={setFilteredNfts}
+          />
+        </div>
       </div>
     </div>
   );
