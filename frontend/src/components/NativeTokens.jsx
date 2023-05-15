@@ -6,6 +6,7 @@ import ReactLoading from "react-loading";
 function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNativeBalance, nativeValue, setNativeValue, selectedCurrency, setSelectedCurrency}) {
 
   const [isLoading, setIsLoading] = useState(true);
+  const [nativeSymbol, setNativeSymbol] = useState('Native');
 
   const getNativeBalance = useCallback(async () => {
     const response = await axios.get("http://localhost:5000/nativeBalance", {
@@ -15,14 +16,19 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
       }
     });
 
-    if(response.data.balance && response.data.usd && response.data.eur){
-      setNativeBalance((Number(response.data.balance) / 1e18).toFixed(3));
+    let r = response.data;
+
+    if(r.balance && r.usd && r.eur && r.symbol){
+      setNativeBalance((Number(r.balance) / 1e18).toFixed(3));
 
       if(selectedCurrency === "USD") {
-        setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.usd)).toFixed(2));
+        setNativeValue(((Number(r.balance) / 1e18) * Number(r.usd)).toFixed(2));
       } else if(selectedCurrency === "EUR") {
-          setNativeValue(((Number(response.data.balance) / 1e18) * Number(response.data.eur)).toFixed(2));
+          setNativeValue(((Number(r.balance) / 1e18) * Number(r.eur)).toFixed(2));
       }
+
+      setNativeSymbol(r.symbol);
+
     }
     setIsLoading(false);
   }, [wallet, chain, selectedCurrency, setNativeBalance, setNativeValue]);
@@ -49,7 +55,7 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
                 noPagination={true}
                 style={{ width: '900px' }}
                 columnsConfig='300px 300px 250px'
-                data={[["Native", nativeBalance, `$ ${nativeValue}`]]}
+                data={[[nativeSymbol, nativeBalance, `$ ${nativeValue}`]]}
                 header={[
                   <span>Currency</span>,
                   <span>Balance</span>,

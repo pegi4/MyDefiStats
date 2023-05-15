@@ -16,7 +16,11 @@ function App() {
   const [nativeBalance, setNativeBalance] = useState(0);
   const [nativeValue, setNativeValue] = useState(0);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
-  const [tokens, setTokens] = useState([]);
+
+  const [allTokens, setAllTokens] = useState([]);
+  const [legitTokens, setLegitTokens] = useState([]);
+  const [spamTokens, setSpamTokens] = useState([]);
+
   const [transfers, setTransfers] = useState([]);
   const [nfts, setNfts] = useState([]);
   const [filteredNfts, setFilteredNfts] = useState([]);
@@ -52,7 +56,7 @@ function App() {
 
         <Porfolio
           nativeValue={nativeValue}
-          tokens={tokens}
+          tokens={legitTokens}
         />
 
         <TabList
@@ -82,8 +86,12 @@ function App() {
           <Tokens
             wallet={wallet}
             chain={chain}
-            tokens={tokens}
-            setTokens={setTokens}
+            allTokens={allTokens}
+            setAllTokens={setAllTokens}
+            legitTokens={legitTokens}
+            setLegitTokens={setLegitTokens}
+            spamTokens={spamTokens}
+            setSpamTokens={setSpamTokens}
           />
         </div>
 

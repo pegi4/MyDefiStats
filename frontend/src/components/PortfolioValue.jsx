@@ -10,7 +10,9 @@ function PortfolioValue({nativeValue, tokens}) {
         let val = 0;
 
         for(let i = 0; i < tokens.length; i++) {
-            val += Number(tokens[i].val);
+            if (tokens[i].val !== 0) {
+                val += Number(tokens[i].val);
+            }
         }
 
         val += Number(nativeValue);

@@ -53,22 +53,12 @@ app.get('/nativeBalance', async (req, res) => {
 
     console.log('nativePrice:', nativePrice);
 
+    nativeBalance.symbol = nativePrice.jsonResponse.nativePrice.symbol;
+
     nativeBalance.usd = nativePrice.jsonResponse.usdPrice;
 
     // USD to EUR
     nativeBalance.eur = nativeBalance.usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
-
-    /*
-    // Get USD to EUR conversion rate
-    const exchangeRatesApiKey = process.env.EXCHANGE_RATES_API_KEY;
-    const exchangeRatesApiUrl = `https://open.er-api.com/v6/latest/USD?apiKey=${exchangeRatesApiKey}`;
-    const exchangeRatesResponse = await axios.get(exchangeRatesApiUrl);
-    const usdToEurRate = exchangeRatesResponse.data.rates.EUR;
-
-    // Convert USD balance to EUR
-    nativeBalance.eur = nativeBalance.usd * usdToEurRate;
-
-    */
 
     console.log('nativeBalance:', nativeBalance);
 
@@ -80,68 +70,80 @@ app.get('/nativeBalance', async (req, res) => {
 
 })
 
-// CoinGecko API Token Price
-async function getTokenPrice(contract_addresses, chain) {
-  const platform = chain === '0x38' ? 'binance-smart-chain' : chain === '0x89' ? 'polygon-pos' : 'ethereum';
+// Fetch Token Price
+const exchanges = ["pancakeswap-v2", "sushiswap-v2", "uniswap-v3", "quickswap"];
 
-  // Join the addresses with commas to form the query parameter
-  const contracts = contract_addresses.join(',');
+async function getTokenPrice(contract_address, chain) {
+  for (let exchange of exchanges) {
+    try {
+      const response = await Moralis.EvmApi.token.getTokenPrice({
+        address: contract_address,
+        chain: chain,
+        exchange: exchange,
+      });
 
-  const url = `https://api.coingecko.com/api/v3/simple/token_price/${platform}?contract_addresses=${contracts}&vs_currencies=usd`;
+      if (response && response.jsonResponse && response.jsonResponse.usdPrice) {
+        // Valid Price
+        return response.jsonResponse.usdPrice;
+      }
 
-  try {
-    const response = await axios.get(url);
-    // Return the whole response.data object instead of a single price
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return null;
+    } catch (error) {
+      console.error(`Error fetching price from ${exchange} `);
+    }
   }
-}
+
+  // Don't get a price from any exchange
+  return null;
+} 
 
 // Fetch Token Balance
 app.get('/tokenBalances', async (req, res) => {
-  try {
-    const { address, chain } = req.query;
+    try {
+      const { address, chain } = req.query;
+  
+      const response = await Moralis.EvmApi.token.getWalletTokenBalances({
+        address: address,
+        chain: chain,
+      });
+  
+      let tokens = response.jsonResponse;
+  
+      let legitTokens = [];
 
-    const response = await Moralis.EvmApi.token.getWalletTokenBalances({
-      address: address,
-      chain: chain,
-    });
+      let spamTokens = [];
+  
+      for (let i = 0; i < tokens.length; i++) {
+        // Call getTokenPrice for each token
+        const price = await getTokenPrice(tokens[i].token_address, chain);
 
-    let tokens = response.jsonResponse;
-
-    let legitTokens = [];
-
-    // Create an array of contract addresses
-    const contract_addresses = tokens.map(token => token.token_address);
-
-    // Call getTokenPrice once with all of the contract addresses
-    const prices = await getTokenPrice(contract_addresses, chain);
-
-    for (let i = 0; i < tokens.length; i++) {
-      // Look up the price in the prices object
-      const price = prices[tokens[i].token_address.toLowerCase()]?.usd;
-
-      if (price && price > 0.01) {
-        tokens[i].usd = price;
-        
-        tokens[i].eur = tokens[i].usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
-
-        legitTokens.push(tokens[i]);
-      } else {
-        console.log("Poo coin");
+        if(price) {
+          tokens[i].usd = price;
+          
+          tokens[i].eur = tokens[i].usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
+        }
+  
+        if (price && !tokens[i].possible_spam) {
+          legitTokens.push(tokens[i]);
+        } else {
+          spamTokens.push(tokens[i]);
+          console.log("Poo coin");
+        }
       }
+  
+      res.send({
+        all: tokens,
+        legit: legitTokens,
+        spam: spamTokens
+      });
+      console.log("All Tokens: ", tokens);
+      console.log("Legit Tokens: ", legitTokens);
+      console.log("Spam Tokens: ", spamTokens);
+  
+    } catch (error) {
+      console.log(error);
     }
-
-    res.send(legitTokens);
-    console.log("All Tokens: ", tokens);
-    console.log("Legit Tokens: ", legitTokens);
-
-  } catch (error) {
-    console.log(error);
-  }
 });
+
 
 // Transactions
 app.get('/tokenTransfers', async (req, res) => {
