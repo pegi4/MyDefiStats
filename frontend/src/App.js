@@ -7,6 +7,7 @@ import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
 import Nfts from './components/Nfts';
 import { TabList, Tab } from '@web3uikit/core';
+import { Blockie } from '@web3uikit/web3';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
 
   return (
     <div className="App">
+
       <WalletInputs
         chain={chain}
         setChain={setChain}
@@ -39,6 +41,15 @@ function App() {
       />
 
       <div className="content">
+
+        <div className="blockie">
+          <Blockie
+            seed={wallet}
+            scale={10}
+          />
+          <p>{wallet}</p>
+        </div>
+
         <Porfolio
           nativeValue={nativeValue}
           tokens={tokens}
