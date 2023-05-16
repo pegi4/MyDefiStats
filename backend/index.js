@@ -136,6 +136,10 @@ app.get('/tokenBalances', async (req, res) => {
       let legitTokens = [];
 
       let spamTokens = [];
+
+      // Fetch USD to EUR conversion rate once instead of in each iteration
+      const conversionRateResponse = await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`);
+      const conversionRate = conversionRateResponse.data.rates.EUR;
   
       for (let i = 0; i < tokens.length; i++) {
         // Call getTokenPrice for each token
@@ -143,8 +147,7 @@ app.get('/tokenBalances', async (req, res) => {
 
         if(price) {
           tokens[i].usd = price;
-          
-          tokens[i].eur = tokens[i].usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
+          tokens[i].eur = tokens[i].usd * conversionRate;
         }
   
         if (price && !tokens[i].possible_spam) {
