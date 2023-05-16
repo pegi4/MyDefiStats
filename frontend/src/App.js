@@ -1,11 +1,12 @@
-import './App.css';
-import { useState, useEffect } from 'react';
 import WalletInputs from './components/WalletInputs';
 import NativeTokens from './components/NativeTokens';
 import Tokens from './components/Tokens';
 import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
 import Nfts from './components/Nfts';
+import './App.css';
+
+import { useState, useEffect } from 'react';
 import { TabList, Tab } from '@web3uikit/core';
 import { Blockie } from '@web3uikit/web3';
 

@@ -16,7 +16,7 @@
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
     "react-scripts": "5.0.1",
-    "wagmi": "^1.0.4",
+    "wagmi": "^1.0.5",
     "web-vitals": "^2.1.4",
     "web3": "^1.10.0"
   },
