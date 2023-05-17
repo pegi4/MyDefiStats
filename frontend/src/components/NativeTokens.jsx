@@ -20,18 +20,22 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
 
     if(r.balance && r.usd && r.eur && r.symbol){
       setNativeBalance((Number(r.balance) / 1e18).toFixed(3));
+      setNativeValue({
+        usd: ((Number(r.balance) / 1e18) * Number(r.usd)).toFixed(2),
+        eur: ((Number(r.balance) / 1e18) * Number(r.eur)).toFixed(2)
+      });
 
-      if(selectedCurrency === "USD") {
+/*       if(selectedCurrency === "USD") {
         setNativeValue(((Number(r.balance) / 1e18) * Number(r.usd)).toFixed(2));
       } else if(selectedCurrency === "EUR") {
           setNativeValue(((Number(r.balance) / 1e18) * Number(r.eur)).toFixed(2));
-      }
+      } */
 
       setNativeSymbol(r.symbol);
 
     }
     setIsLoading(false);
-  }, [wallet, chain, selectedCurrency, setNativeBalance, setNativeValue]);
+  }, [wallet, chain, setNativeBalance, setNativeValue]);
 
   useEffect(() => {
     if(wallet){
@@ -39,7 +43,7 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
         console.error(err);
       });
     }
-  }, [wallet, chain, selectedCurrency, getNativeBalance]);
+  }, [wallet, chain, getNativeBalance]);
 
   return (
     <>
@@ -48,14 +52,14 @@ function NativeTokens({chain, setChain, wallet, setWallet, nativeBalance, setNat
             (
               <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
             ) 
-        : nativeBalance > 0 && nativeValue > 0 &&
+        : nativeBalance && nativeValue &&
             (
               <Table
                 pageSize={1}
                 noPagination={true}
                 style={{ width: '900px' }}
                 columnsConfig='300px 300px 250px'
-                data={[[nativeSymbol, nativeBalance, `$ ${nativeValue}`]]}
+                data={[[nativeSymbol, nativeBalance, `${selectedCurrency === "USD" ? "$" : "€"} ${nativeValue[selectedCurrency.toLowerCase()]}`]]}
                 header={[
                   <span>Currency</span>,
                   <span>Balance</span>,

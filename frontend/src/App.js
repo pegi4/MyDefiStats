@@ -27,6 +27,12 @@ function App() {
   const [filteredNfts, setFilteredNfts] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
 
+  // function to switch currency
+  const switchCurrency = () => {
+    setSelectedCurrency(selectedCurrency === "USD" ? "EUR" : "USD");
+    console.log("Switch currency to: ", selectedCurrency)
+  };
+
   useEffect(() => {
     localStorage.setItem('wallet', wallet);
   }, [wallet]);
@@ -34,6 +40,8 @@ function App() {
   useEffect(() => {
     localStorage.setItem('chain', chain);
   }, [chain]);
+
+  
 
   return (
     <div className="App">
@@ -53,11 +61,17 @@ function App() {
             scale={10}
           />
           <p>{wallet}</p>
+
+          <button onClick={switchCurrency}>Switch Currency</button>
+          <span> {selectedCurrency} </span>
+
         </div>
 
         <Porfolio
           nativeValue={nativeValue}
           tokens={legitTokens}
+          selectedCurrency={selectedCurrency}
+          setSelectedCurrency={setSelectedCurrency}
         />
 
         <TabList
@@ -93,6 +107,8 @@ function App() {
             setLegitTokens={setLegitTokens}
             spamTokens={spamTokens}
             setSpamTokens={setSpamTokens}
+            selectedCurrency={selectedCurrency}
+            setSelectedCurrency={setSelectedCurrency}
           />
         </div>
 

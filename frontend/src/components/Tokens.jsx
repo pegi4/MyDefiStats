@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Table, TabList, Tab } from '@web3uikit/core';
 import ReactLoading from "react-loading";
 
-function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTokens, spamTokens, setSpamTokens}) {
+function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTokens, spamTokens, setSpamTokens, selectedCurrency, setSelectedCurrency}) {
 
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(1);
@@ -21,11 +21,13 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
       
           const processTokens = (tokens) => {
             return tokens.map(t => {
-                let val = t.usd ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.usd)).toFixed(3) : 0;
+                let dVal = t.usd ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.usd)).toFixed(3) : 0;
+                let eVal = t.eur ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.eur)).toFixed(3) : 0;
                 return {
                     ...t,
                     bal: (Number(t.balance) / Number(`1e${t.decimals}`)).toFixed(3),
-                    val: val
+                    dVal: dVal,
+                    eVal: eVal
                 };
             });
           }        
@@ -40,6 +42,7 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
 
     useEffect(() => {
         if(wallet){
+            setIsLoading(true);
             getTokenBalances().catch((err) => {
                 console.error(err);
             });
@@ -66,12 +69,19 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
   
               {/* Render the components conditionally, but don't unmount them when not active */}
               <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
-                <Table 
+              <Table 
                     pageSize={6}
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={legitTokens.map((e) => [e.symbol, e.bal, e.val === 0 ? "No price" : `$ ${e.val}`])}
+                    data={legitTokens.map((e) => [
+                      e.symbol, 
+                      e.bal, 
+                      selectedCurrency === "USD" ? 
+                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        : 
+                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                    ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
@@ -86,7 +96,14 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={spamTokens.map((e) => [e.symbol, e.bal, e.val === 0 ? "No price" : `$ ${e.val}`])}
+                    data={spamTokens.map((e) => [
+                      e.symbol, 
+                      e.bal, 
+                      selectedCurrency === "USD" ? 
+                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        : 
+                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                    ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
@@ -101,7 +118,14 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={allTokens.map((e) => [e.symbol, e.bal, e.val === 0 ? "No price" : `$ ${e.val}`])}
+                    data={allTokens.map((e) => [
+                      e.symbol, 
+                      e.bal, 
+                      selectedCurrency === "USD" ? 
+                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        : 
+                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                    ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
