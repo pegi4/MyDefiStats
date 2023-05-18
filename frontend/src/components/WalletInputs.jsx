@@ -87,14 +87,20 @@ function WalletInputs({ chain, setChain, wallet, setWallet }) {
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
           onSuggestionSelected={(_, { suggestion }) => {
-            setWallet(suggestion);
+            if (wallet !== suggestion) {
+              setWallet(suggestion);
+            }
             setInputValue('');  // clear the input
           }}
         />
         <Select
           defaultOptionIndex={chain === "0x1" ? 0 : 1}
           id="Chain"
-          onChange={(e) => setChain(e.value)}
+          onChange={(e) => {
+            if (chain !== e.value) {
+              setChain(e.value);
+            }
+          }}
           options={[
             { 
               id: "eth",

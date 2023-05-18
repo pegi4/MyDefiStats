@@ -174,4 +174,4 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
 
 }
 
-export default Tokens
+export default React.memo(Tokens);

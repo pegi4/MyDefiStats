@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ReactLoading from "react-loading";
 
-function PortfolioValueAux({tokens, selectedCurrency}) {
+function PortfolioValue({tokens, selectedCurrency}) {
 
     const [totalValue, setTotalValue] = useState(0);
 
@@ -16,7 +16,7 @@ function PortfolioValueAux({tokens, selectedCurrency}) {
                         val += Number(tokens[i].dVal);
                     }
                 } else if (selectedCurrency === "EUR") {
-                    if (tokens.all[i].eVal !== 0) {
+                    if (tokens[i].eVal !== 0) {
                         val += Number(tokens[i].eVal);
                     }
                 }
@@ -35,4 +35,4 @@ function PortfolioValueAux({tokens, selectedCurrency}) {
     )
 }
 
-export default PortfolioValueAux;
+export default PortfolioValue;

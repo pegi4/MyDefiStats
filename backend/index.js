@@ -169,9 +169,9 @@ app.get('/tokenBalances', async (req, res) => {
       });
       console.log("Request succesful for tokens!");
 
-/*       console.log("All Tokens: ", tokens);
+      console.log("All Tokens: ", tokens);
       console.log("Legit Tokens: ", legitTokens);
-      console.log("Spam Tokens: ", spamTokens); */
+      console.log("Spam Tokens: ", spamTokens);
   
     } catch (error) {
       console.log(error);
@@ -220,7 +220,7 @@ app.get('/tokenTransfers', async (req, res) => {
       }
     } 
 
-    //console.log(userTransDetails);
+    console.log(userTransDetails);
     res.send(userTransDetails);
     console.log("Request succesful for transfers!");
 
