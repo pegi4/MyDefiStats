@@ -20,10 +20,6 @@ code {
   width: 90% !important;
 }
 
-.hkbjFy {
-  background-color: rgb(33, 33, 38) !important;
-}
-
 .sc-gfbRpc {
   background-color: rgb(33, 33, 38) !important;
   color: white !important;
@@ -33,6 +29,8 @@ code {
 
 .bqsWMK{
   background-color: rgba(33, 33, 38, 0.95) !important;
+  border: 0 !important;
+  padding: 5px !important;
 }
 
 .sc-bczRLJ{

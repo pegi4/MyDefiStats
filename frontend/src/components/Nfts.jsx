@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Input } from '@web3uikit/core';
+import '../App.css';
 
 function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 

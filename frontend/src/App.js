@@ -6,7 +6,7 @@ import Nfts from './components/Nfts';
 import './App.css';
 
 import { useState, useEffect } from 'react';
-import { TabList, Tab, Select, CryptoLogos } from '@web3uikit/core';
+import { TabList, Tab} from '@web3uikit/core';
 import { Blockie } from '@web3uikit/web3';
 
 function App() {
@@ -85,41 +85,35 @@ function App() {
               <button onClick={() => switchCurrency("EUR")} className="currency-option" type="button">EUR</button>
             </div>
           </div>
+
         </div>
 
-        <TabList
-          onChange={(selectedKey) => {
-            console.log("Selected tab:", selectedKey);
-            setActiveTab(selectedKey);
-          }}
-        >
-          <Tab tabKey={1} tabName={"Tokens"} />
-          <Tab tabKey={2} tabName={"NFTs"} />
-          <Tab tabKey={3} tabName={"History"} />
-          <Select
-          defaultOptionIndex={chain === "0x1" ? 0 : 1}
-          id="Chain"
-          onChange={(e) => {
-            if (chain !== e.value) {
-              setChain(e.value);
-            }
-          }}
-          options={[
-            { 
-              id: "eth",
-              value: "0x1",
-              label: "Ethereum",
-              prefix: <CryptoLogos chain="ethereum" />,
-            },
-            {
-              id: "bsc",
-              value: "0x38",
-              label: "Binance Smart Chain",
-              prefix: <CryptoLogos chain="binance" />,
-            },
-          ]}
-        />
-        </TabList>
+        <div className="tab-select">
+          <TabList
+            onChange={(selectedKey) => {
+              console.log("Selected tab:", selectedKey);
+              setActiveTab(selectedKey);
+            }}
+          >
+            <Tab tabKey={1} tabName={"Tokens"} />
+            <Tab tabKey={2} tabName={"NFTs"} />
+            <Tab tabKey={3} tabName={"History"} />
+          </TabList>
+
+          <select
+            value={chain}
+            onChange={(e) => setChain(e.target.value)}
+            className="chain-selector"
+          >
+            <option value="0x1">
+              ETH
+            </option>
+            <option value="0x38">
+              BSC
+            </option>
+          </select>
+
+        </div>
 
         {/* Render the components conditionally, but don't unmount them when not active */}
         <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>

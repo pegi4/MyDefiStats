@@ -294,3 +294,21 @@
   gap: 40px;
   flex-wrap: wrap;
 }
+
+.tab-select {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chain-selector {
+  height: 2rem;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #29292C;
+  color: white;
+  font-family: 'Rubik';
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+}
