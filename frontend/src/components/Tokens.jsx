@@ -3,10 +3,22 @@ import axios from 'axios'
 import { Table, TabList, Tab } from '@web3uikit/core';
 import ReactLoading from "react-loading";
 
-function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
+function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
 
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(1);
+
+    const formatNumber = (num) => {
+      let symbol = selectedCurrency === "USD" ? "$" : "€";
+      if (!num) return "No Price";
+      if (num < 0.1) {
+        let precision = Math.ceil(Math.abs(Math.log10(num))) + 1;
+        return `${symbol} ${num.toFixed(precision)}`;
+      }
+      return `${symbol} ${num.toFixed(2)}`;
+    }
+    
+  
 
     const getBalances = useCallback(async () => {
       try {
@@ -38,11 +50,11 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
       
           const processTokens = (tokens) => {
             return tokens.map(t => {
-                let dVal = t.usd ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.usd)).toFixed(3) : 0;
-                let eVal = t.eur ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.eur)).toFixed(3) : 0;
+                let dVal = t.usd ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.usd)).toFixed(2) : 0;
+                let eVal = t.eur ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.eur)).toFixed(2) : 0;
                 return {
                     ...t,
-                    bal: (Number(t.balance) / Number(`1e${t.decimals}`)).toFixed(3),
+                    bal: (Number(t.balance) / Number(`1e${t.decimals}`)).toFixed(2),
                     dVal: dVal,
                     eVal: eVal
                 };
@@ -51,9 +63,11 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
           
           let nb = {
             symbol: nativeBalanceData.symbol,
-            bal : (Number(nativeBalanceData.balance) / 1e18).toFixed(3),
+            bal : (Number(nativeBalanceData.balance) / 1e18).toFixed(2),
             dVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.usd)).toFixed(2),
-            eVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.eur)).toFixed(2)
+            eVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.eur)).toFixed(2),
+            usd: nativeBalanceData.usd,
+            eur: nativeBalanceData.eur,
           };
 
           setTokensData({
@@ -105,20 +119,26 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '900px' }}
-                    columnsConfig='300px 300px 250px'
+                    style={{ width: '1200px' }}
+                    columnsConfig='300px 300px 300px 300px'
                     data={tokensData.legit.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
                         : 
-                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                        (e.eVal === 0 ? "No Value" : `${e.eVal} €`),
+                        selectedCurrency === "USD" ? 
+                        formatNumber(e.usd)
+                        : 
+                        formatNumber(e.eur),
+                      
                     ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
-                        <span>Value</span>
+                        <span>Value</span>,
+                        <span>Price</span>,
                     ]}
                 />
               </div>
@@ -127,20 +147,26 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '900px' }}
-                    columnsConfig='300px 300px 250px'
+                    style={{ width: '1200px' }}
+                    columnsConfig='300px 300px 300px 300px'
                     data={tokensData.spam.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
                         : 
-                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                        (e.eVal === 0 ? "No Value" : `${e.eVal} €`),
+                        selectedCurrency === "USD" ? 
+                        formatNumber(e.usd)
+                        : 
+                        formatNumber(e.eur),
+                      
                     ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
-                        <span>Value</span>
+                        <span>Value</span>,
+                        <span>Price</span>,
                     ]}
                 />
               </div>
@@ -149,20 +175,26 @@ function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '900px' }}
-                    columnsConfig='300px 300px 250px'
+                    style={{ width: '1200px' }}
+                    columnsConfig='300px 300px 300px 300px'
                     data={tokensData.all.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No price" : `$ ${e.dVal}`) 
+                        (e.dVal === 0 ? "No Value" : `$${e.dVal}`) 
                         : 
-                        (e.eVal === 0 ? "No price" : `€ ${e.eVal}`)
+                        (e.eVal === 0 ? "No Value" : `€${e.eVal}`),
+                        selectedCurrency === "USD" ? 
+                        formatNumber(e.usd)
+                        : 
+                        formatNumber(e.eur),
+                      
                     ])}
                     header={[
                         <span>Token</span>,
                         <span>Balance</span>,
-                        <span>Value</span>
+                        <span>Value</span>,
+                        <span>Price</span>,
                     ]}
                 />
             </div>
