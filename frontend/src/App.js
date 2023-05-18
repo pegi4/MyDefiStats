@@ -1,5 +1,4 @@
 import WalletInputs from './components/WalletInputs';
-import NativeTokens from './components/NativeTokens';
 import Tokens from './components/Tokens';
 import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
@@ -14,13 +13,14 @@ function App() {
 
   const [wallet, setWallet] = useState(localStorage.getItem('wallet') || "");
   const [chain, setChain] = useState(localStorage.getItem('chain') || "0x1");  
-  const [nativeBalance, setNativeBalance] = useState(0);
-  const [nativeValue, setNativeValue] = useState(0);
+
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
-  const [allTokens, setAllTokens] = useState([]);
-  const [legitTokens, setLegitTokens] = useState([]);
-  const [spamTokens, setSpamTokens] = useState([]);
+  const [tokensData, setTokensData] = useState({
+    all: [],
+    legit: [],
+    spam: [],
+  });
 
   const [transfers, setTransfers] = useState([]);
   const [nfts, setNfts] = useState([]);
@@ -68,8 +68,8 @@ function App() {
         </div>
 
         <Porfolio
-          nativeValue={nativeValue}
-          tokens={legitTokens}
+          tokens={tokensData.legit}
+          setTokensData={setTokensData}
           selectedCurrency={selectedCurrency}
           setSelectedCurrency={setSelectedCurrency}
         />
@@ -88,25 +88,11 @@ function App() {
 
         {/* Render the components conditionally, but don't unmount them when not active */}
         <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
-          <NativeTokens
-            wallet={wallet}
-            chain={chain}
-            nativeBalance={nativeBalance}
-            setNativeBalance={setNativeBalance}
-            nativeValue={nativeValue}
-            setNativeValue={setNativeValue}
-            selectedCurrency={selectedCurrency}
-            setSelectedCurrency={setSelectedCurrency}
-          />
           <Tokens
             wallet={wallet}
             chain={chain}
-            allTokens={allTokens}
-            setAllTokens={setAllTokens}
-            legitTokens={legitTokens}
-            setLegitTokens={setLegitTokens}
-            spamTokens={spamTokens}
-            setSpamTokens={setSpamTokens}
+            tokensData={tokensData}
+            setTokensData={setTokensData}
             selectedCurrency={selectedCurrency}
             setSelectedCurrency={setSelectedCurrency}
           />

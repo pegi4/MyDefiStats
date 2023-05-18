@@ -3,21 +3,38 @@ import axios from 'axios'
 import { Table, TabList, Tab } from '@web3uikit/core';
 import ReactLoading from "react-loading";
 
-function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTokens, spamTokens, setSpamTokens, selectedCurrency, setSelectedCurrency}) {
+function Tokens({chain, wallet, tokensData, setTokensData ,selectedCurrency}) {
 
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState(1);
 
-    const getTokenBalances = useCallback(async () => {
-        const response = await axios.get("http://localhost:5000/tokenBalances", {
+    const getBalances = useCallback(async () => {
+      try {
+        const tokenBalancesRequest = axios.get("http://localhost:5000/tokenBalances", {
           params: {
             address: wallet,
             chain: chain,
-          }
+          },
         });
       
-        if(response.data) {
-          const { all, legit, spam } = response.data;
+        const nativeBalanceRequest = axios.get("http://localhost:5000/nativeBalance", {
+          params: {
+            address: wallet,
+            chain: chain,
+          },
+        });
+      
+        const [tokenBalancesResponse, nativeBalanceResponse] = await Promise.all([
+          tokenBalancesRequest,
+          nativeBalanceRequest,
+        ]);
+      
+        // Process the responses
+        const tokenBalancesData = tokenBalancesResponse.data;
+        const nativeBalanceData = nativeBalanceResponse.data;
+      
+        if(tokenBalancesData && nativeBalanceData) {
+          const { all, legit, spam } = tokenBalancesData;
       
           const processTokens = (tokens) => {
             return tokens.map(t => {
@@ -30,32 +47,48 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     eVal: eVal
                 };
             });
-          }        
+          }
+          
+          let nb = {
+            symbol: nativeBalanceData.symbol,
+            bal : (Number(nativeBalanceData.balance) / 1e18).toFixed(3),
+            dVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.usd)).toFixed(2),
+            eVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.eur)).toFixed(2)
+          };
+
+          setTokensData({
+            all: [nb, ...processTokens(all)],
+            legit: [nb, ...processTokens(legit)],
+            spam: processTokens(spam),
+          });
+          
       
-          setAllTokens(processTokens(all));
-          setLegitTokens(processTokens(legit));
-          setSpamTokens(processTokens(spam));
         }
-      
+
         setIsLoading(false);
-    }, [wallet, chain, setAllTokens, setLegitTokens, setSpamTokens]);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    
+    }, [wallet, chain, setTokensData]);
 
     useEffect(() => {
         if(wallet){
             setIsLoading(true);
-            getTokenBalances().catch((err) => {
+            getBalances().catch((err) => {
                 console.error(err);
             });
         }
-    }, [wallet, chain, getTokenBalances]);
+    }, [wallet, chain, getBalances]);
 
     return (
       <>
-        <div className="tabHeading"> Tokens </div>
+        {/* <div className="tabHeading"> Tokens </div> */}
         {isLoading ? (
           <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
         ) : (
-          allTokens.length > 0 && (
+          tokensData?.all?.length > 0 && (
             <>
               <TabList
                 onChange={(selectedKey) => {
@@ -74,7 +107,7 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={legitTokens.map((e) => [
+                    data={tokensData.legit.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 
@@ -96,7 +129,7 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={spamTokens.map((e) => [
+                    data={tokensData.spam.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 
@@ -118,7 +151,7 @@ function Tokens({chain, wallet, allTokens, setAllTokens, legitTokens, setLegitTo
                     noPagination="true"
                     style={{ width: '900px' }}
                     columnsConfig='300px 300px 250px'
-                    data={allTokens.map((e) => [
+                    data={tokensData.all.map((e) => [
                       e.symbol, 
                       e.bal, 
                       selectedCurrency === "USD" ? 

@@ -49,6 +49,8 @@ app.get('/nativeBalance', async (req, res) => {
 
   //await Moralis.start({ apiKey: process.env.MORALIS_API_KEY });
 
+  console.log("Request received for Native coin!");
+
   try{
 
     const { address, chain } = req.query;
@@ -76,7 +78,7 @@ app.get('/nativeBalance', async (req, res) => {
       chain: chain,
     });
 
-    console.log('nativePrice:', nativePrice);
+    //console.log('nativePrice:', nativePrice);
 
     nativeBalance.symbol = nativePrice.jsonResponse.nativePrice.symbol;
 
@@ -85,9 +87,10 @@ app.get('/nativeBalance', async (req, res) => {
     // USD to EUR
     nativeBalance.eur = nativeBalance.usd * (await axios.get(`https://open.er-api.com/v6/latest/USD?apiKey=${process.env.EXCHANGE_RATES_API_KEY}`)).data.rates.EUR;
 
-    console.log('nativeBalance:', nativeBalance);
+    //console.log('nativeBalance:', nativeBalance);
 
     res.send(nativeBalance)
+    console.log("Request succesful for native coin!");
 
   }catch(error){
     console.log(error)
@@ -113,7 +116,7 @@ async function getTokenPrice(contract_address, chain) {
       }
 
     } catch (error) {
-      console.error(`Error fetching price from ${exchange} `);
+      //console.error(`Error fetching price from ${exchange} `);
     }
   }
 
@@ -123,6 +126,7 @@ async function getTokenPrice(contract_address, chain) {
 
 // Fetch Token Balance
 app.get('/tokenBalances', async (req, res) => {
+    console.log("Request received for tokens!");
     try {
       const { address, chain } = req.query;
   
@@ -163,9 +167,11 @@ app.get('/tokenBalances', async (req, res) => {
         legit: legitTokens,
         spam: spamTokens
       });
-      console.log("All Tokens: ", tokens);
+      console.log("Request succesful for tokens!");
+
+/*       console.log("All Tokens: ", tokens);
       console.log("Legit Tokens: ", legitTokens);
-      console.log("Spam Tokens: ", spamTokens);
+      console.log("Spam Tokens: ", spamTokens); */
   
     } catch (error) {
       console.log(error);
@@ -175,6 +181,8 @@ app.get('/tokenBalances', async (req, res) => {
 
 // Transactions
 app.get('/tokenTransfers', async (req, res) => {
+
+  console.log("Request received for transfers!");
 
   try {
 
@@ -212,8 +220,9 @@ app.get('/tokenTransfers', async (req, res) => {
       }
     } 
 
-    console.log(userTransDetails);
+    //console.log(userTransDetails);
     res.send(userTransDetails);
+    console.log("Request succesful for transfers!");
 
   } catch (error) {
     console.log(error);
@@ -223,7 +232,9 @@ app.get('/tokenTransfers', async (req, res) => {
 
 // NFT Balance
 app.get('/nftBalance', async (req, res) => {
+  
   try {
+    console.log("Request received for NFTs!");
     const { address, chain } = req.query;
 
     const response = await Moralis.EvmApi.nft.getWalletNFTs({
@@ -233,6 +244,7 @@ app.get('/nftBalance', async (req, res) => {
 
     const nfts = response.jsonResponse;
     res.send(nfts);
+    console.log("Request succesful for NFTs!");
 
   } catch (error) {
     console.log(error);

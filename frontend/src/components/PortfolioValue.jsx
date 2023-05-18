@@ -1,7 +1,7 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import ReactLoading from "react-loading";
 
-function PortfolioValue({nativeValue, tokens, selectedCurrency}) {
+function PortfolioValueAux({tokens, selectedCurrency}) {
 
     const [totalValue, setTotalValue] = useState(0);
 
@@ -9,35 +9,30 @@ function PortfolioValue({nativeValue, tokens, selectedCurrency}) {
 
         let val = 0;
 
-        for(let i = 0; i < tokens.length; i++) {
-            if (selectedCurrency === "USD") {
-                if (tokens[i].dVal !== 0) {
-                    val += Number(tokens[i].dVal);
-                }
-            } else if (selectedCurrency === "EUR") {
-                if (tokens[i].eVal !== 0) {
-                    val += Number(tokens[i].eVal);
+        if(tokens && tokens.length > 0) {
+            for(let i = 0; i < tokens.length; i++) {
+                if (selectedCurrency === "USD") {
+                    if (tokens[i].dVal !== 0) {
+                        val += Number(tokens[i].dVal);
+                    }
+                } else if (selectedCurrency === "EUR") {
+                    if (tokens.all[i].eVal !== 0) {
+                        val += Number(tokens[i].eVal);
+                    }
                 }
             }
+            setTotalValue(val.toFixed(2));
         }
 
-        if (selectedCurrency === "USD") {
-            val += Number(nativeValue.usd);
-        } else if (selectedCurrency === "EUR") {
-            val += Number(nativeValue.eur);
-        }
+    }, [tokens, selectedCurrency])
 
-        setTotalValue(val.toFixed(2));
-
-    }, [nativeValue, tokens, selectedCurrency])
-
-  return (
+    return (
     <>
         <h2>
-            Portfolio Total Value: {selectedCurrency === "USD" ? "$" : "€"} {totalValue}
+            Portfolio Total Value: {totalValue === 0 ? <ReactLoading type="cylon" color="#687994" height={100} width={50} /> : (selectedCurrency === "USD" ? "$" : "€") + " " + totalValue}
         </h2>
     </>
-  )
+    )
 }
 
-export default PortfolioValue
+export default PortfolioValueAux;
