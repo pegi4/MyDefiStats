@@ -48,7 +48,7 @@ function TransferHistory({chain, wallet, transfers, setTransfers}) {
                     columnsConfig='auto auto auto auto auto'
                     data={transfers.map((e) => [
                         e.symbol,
-                        (Number(e.value) / Number(`1e${e.decimals}`)).toFixed(3),
+                        (Number(e.value) / Number(`1e${e.decimals}`)).toFixed(2),
                         `${e.from_address.slice(0,4)}...${e.from_address.slice(38)}`,
                         `${e.to_address.slice(0,4)}...${e.to_address.slice(38)}`,
                         e.block_timestamp.slice(0,10),

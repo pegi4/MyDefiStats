@@ -29,7 +29,7 @@ function PortfolioValue({tokens, selectedCurrency}) {
     return (
     <>
         <h2>
-            Portfolio Total Value: {totalValue === 0 ? <ReactLoading type="cylon" color="#687994" height={100} width={50} /> : (selectedCurrency === "USD" ? "$" : "€") + " " + totalValue}
+            Portfolio Total Value: {totalValue === 0 ? <ReactLoading type="cylon" color="#687994" height={100} width={50} /> : (selectedCurrency === "USD" ? "$" : "€") + totalValue}
         </h2>
     </>
     )

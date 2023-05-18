@@ -81,8 +81,8 @@ function App() {
           }}
         >
           <Tab tabKey={1} tabName={"Tokens"} />
-          <Tab tabKey={2} tabName={"Transfers"} />
-          <Tab tabKey={3} tabName={"NFTs"} />
+          <Tab tabKey={2} tabName={"NFTs"} />
+          <Tab tabKey={3} tabName={"History"} />
           <Select
           defaultOptionIndex={chain === "0x1" ? 0 : 1}
           id="Chain"
@@ -121,15 +121,6 @@ function App() {
         </div>
 
         <div style={{ display: activeTab === 2 ? 'block' : 'none' }}>
-          <TransferHistory
-            wallet={wallet}
-            chain={chain}
-            transfers={transfers}
-            setTransfers={setTransfers}
-          />
-        </div>
-
-        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
           <Nfts
             wallet={wallet}
             chain={chain}
@@ -137,6 +128,15 @@ function App() {
             setNfts={setNfts}
             filteredNfts={filteredNfts}
             setFilteredNfts={setFilteredNfts}
+          />
+        </div>
+
+        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
+          <TransferHistory
+            wallet={wallet}
+            chain={chain}
+            transfers={transfers}
+            setTransfers={setTransfers}
           />
         </div>
       </div>
