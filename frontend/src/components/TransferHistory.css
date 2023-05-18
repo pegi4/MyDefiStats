@@ -1,0 +1,54 @@
+.tabHeading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .transactions-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .transaction-group {
+    margin-bottom: 20px;
+  }
+  
+  .date-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .transaction {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #00000020;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .transaction-type {
+    width: auto;
+    font-weight: bold;
+  }
+  
+  .transaction-details {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .token-amount {
+    font-weight: bold;
+  }
+  
+  .address {
+    font-style: italic;
+    color: #c3c3c3;
+  }
+  
