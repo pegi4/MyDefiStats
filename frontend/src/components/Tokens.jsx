@@ -119,8 +119,8 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '1200px' }}
-                    columnsConfig='300px 300px 300px 300px'
+                    style={{ width: 'auto' }}
+                    columnsConfig='auto auto auto auto'
                     data={tokensData.legit.map((e) => [
                       e.symbol, 
                       e.bal, 
@@ -147,8 +147,8 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '1200px' }}
-                    columnsConfig='300px 300px 300px 300px'
+                    style={{ width: 'auto' }}
+                    columnsConfig='auto auto auto auto'
                     data={tokensData.spam.map((e) => [
                       e.symbol, 
                       e.bal, 
@@ -175,8 +175,8 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
               <Table 
                     pageSize={6}
                     noPagination="true"
-                    style={{ width: '1200px' }}
-                    columnsConfig='300px 300px 300px 300px'
+                    style={{ width: 'auto' }}
+                    columnsConfig='auto auto auto auto'
                     data={tokensData.all.map((e) => [
                       e.symbol, 
                       e.bal, 

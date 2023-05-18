@@ -60,7 +60,7 @@ export default function SignIn({ onLogin }) {
 
   return (
     <div>
-      <button onClick={handleAuth}>Add wallet</button>
+      <button className="walletButton" onClick={handleAuth}>Add wallet</button>
     </div>
   );
 }

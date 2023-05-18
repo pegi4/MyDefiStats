@@ -12,7 +12,7 @@ import { Blockie } from '@web3uikit/web3';
 function App() {
 
   const [wallet, setWallet] = useState(localStorage.getItem('wallet') || "");
-  const [chain, setChain] = useState(localStorage.getItem('chain') || "0x1");  
+  const [chain, setChain] = useState(localStorage.getItem('chain') || "0x1");
 
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
@@ -56,23 +56,36 @@ function App() {
       <div className="content">
 
         <div className="blockie">
-          <Blockie
-            seed={wallet}
-            scale={10}
-          />
-          <p>{wallet}</p>
-
-          <button onClick={switchCurrency}>Switch Currency</button>
-          <span> {selectedCurrency} </span>
-
+          <div className="blockie-content">
+            <div>
+              <Blockie seed={wallet} scale={14} />
+            </div>
+            <div className="wallet-info">
+              <p className="wallet-address">{wallet}</p>
+              <Porfolio
+                className="portfolio"
+                tokens={tokensData.legit}
+                setTokensData={setTokensData}
+                selectedCurrency={selectedCurrency}
+                setSelectedCurrency={setSelectedCurrency}
+              />
+            </div>
+          </div>
+          <div className="currency-dropdown">
+            <div className="currency-selector">
+              <div className="currency-text">{selectedCurrency}</div>
+              <div className="arrow-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12">
+                  <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M1.621 3.19a.807.807 0 011.108 0L6 6.271 9.27 3.19a.807.807 0 011.109 1.175L6 8.5 1.621 4.364a.807.807 0 010-1.174z"></path>
+                </svg>
+              </div>
+            </div>
+            <div className="currency-options">
+              <button onClick={() => switchCurrency("USD")} className="currency-option" type="button">USD</button>
+              <button onClick={() => switchCurrency("EUR")} className="currency-option" type="button">EUR</button>
+            </div>
+          </div>
         </div>
-
-        <Porfolio
-          tokens={tokensData.legit}
-          setTokensData={setTokensData}
-          selectedCurrency={selectedCurrency}
-          setSelectedCurrency={setSelectedCurrency}
-        />
 
         <TabList
           onChange={(selectedKey) => {

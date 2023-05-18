@@ -48,7 +48,7 @@ function WalletInputs({ wallet, setWallet }) {
   const getSuggestionValue = (suggestion) => suggestion;
 
   const renderSuggestion = (suggestion) => (
-    <div>
+    <div className="suggestion-item">
       <Blockie seed={suggestion} size={10} scale={3} />
       <span>{suggestion}</span>
     </div>
@@ -79,6 +79,7 @@ function WalletInputs({ wallet, setWallet }) {
     <div className='header'>
       <div className='title'>
         <Autosuggest
+          className='autosuggest'
           suggestions={suggestions}
           onSuggestionsFetchRequested={onSuggestionsFetchRequested}
           onSuggestionsClearRequested={onSuggestionsClearRequested}
@@ -89,7 +90,7 @@ function WalletInputs({ wallet, setWallet }) {
             if (wallet !== suggestion) {
               setWallet(suggestion);
             }
-            setInputValue('');  // clear the input
+            setInputValue('');
           }}
         />
       </div>

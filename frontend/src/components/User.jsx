@@ -12,8 +12,7 @@ export default function User({ session, onLogout, setWallet }) {
 
   return (
     <div>
-      <pre>{JSON.stringify(session.address, null, 2)}</pre>
-      <button type="button" onClick={signOut}>
+      <button className="walletButton" type="button" onClick={signOut}>
         Sign out
       </button>
     </div>
