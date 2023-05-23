@@ -5,7 +5,9 @@
 # Start
     BACKEND:
         cd backend
+	    npm install
         node index.js or nodemon
     FRONTEND:
         cd frontend
+	    npm install
         npm start
