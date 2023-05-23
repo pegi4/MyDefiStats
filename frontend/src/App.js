@@ -112,7 +112,6 @@ function App() {
               BSC
             </option>
           </select>
-
         </div>
 
         {/* Render the components conditionally, but don't unmount them when not active */}
@@ -120,7 +119,7 @@ function App() {
           <Tokens
             wallet={wallet}
             chain={chain}
-            tokensData={tokensData}
+            tokensData={tokensData}s
             setTokensData={setTokensData}
             selectedCurrency={selectedCurrency}
             setSelectedCurrency={setSelectedCurrency}
