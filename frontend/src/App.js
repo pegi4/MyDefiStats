@@ -7,7 +7,7 @@ import './App.css';
 
 import { useState, useEffect } from 'react';
 import { TabList, Tab} from '@web3uikit/core';
-import { Blockie } from '@web3uikit/web3';
+import Blockie from 'react-blockies';
 
 function App() {
 
@@ -57,7 +57,7 @@ function App() {
 
         <div className="blockie">
           <div className="blockie-content">
-            <div>
+            <div rounded-md>
               <Blockie seed={wallet} scale={14} />
             </div>
             <div className="wallet-info">
@@ -87,7 +87,7 @@ function App() {
           </div>
 
         </div>
-
+        
         <div className="tab-select">
           <TabList
             onChange={(selectedKey) => {
