@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
-import { Table } from '@web3uikit/core';
 import ReactLoading from "react-loading";
 import TabList from './TabList';
 import Tab from './Tab';
@@ -98,6 +97,47 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         }
     }, [wallet, chain, getBalances]);
 
+    const renderTable = (data) => (
+      <div className="overflow-x-auto">
+        <div className="min-w-screen flex items-center justify-center font-sans overflow-hidden">
+          <div className="w-full">
+            <div className="bg-neutral-700 shadow-md rounded-lg my-6 overflow-hidden">
+              <table className="min-w-max w-full table-auto">
+                <thead>
+                  <tr className="bg-neutral-800 text-white-600 uppercase text-sm leading-normal">
+                    <th className="py-3 px-6 text-left">Token</th>
+                    <th className="py-3 px-6 text-left">Balance</th>
+                    <th className="py-3 px-6 text-left">Value</th>
+                    <th className="py-3 px-6 text-left">Price</th>
+                  </tr>
+                </thead>
+                <tbody className="text-white-600 text-sm font-semibold">
+                  {data.map((e) => (
+                    <tr className="hover:bg-neutral-600">
+                      <td className="py-3 px-6 text-left whitespace-nowrap">{e.symbol}</td>
+                      <td className="py-3 px-6 text-left">{e.bal}</td>
+                      <td className="py-3 px-6 text-left">
+                        {selectedCurrency === "USD" ? 
+                          (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
+                          : 
+                          (e.eVal === 0 ? "No Value" : `${e.eVal} €`)}
+                      </td>
+                      <td className="py-3 px-6 text-left">
+                        {selectedCurrency === "USD" ? 
+                          formatNumber(e.usd)
+                          : 
+                          formatNumber(e.eur)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
     return (
       <>
         {/* <div className="tabHeading"> Tokens </div> */}
@@ -112,90 +152,17 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                   <Tab>All</Tab>
               </TabList>
   
-              {/* Render the components conditionally, but don't unmount them when not active */}
               <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
-              <Table 
-                    pageSize={6}
-                    noPagination="true"
-                    style={{ width: 'auto' }}
-                    columnsConfig='auto auto auto auto'
-                    data={tokensData.legit.map((e) => [
-                      e.symbol, 
-                      e.bal, 
-                      selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
-                        : 
-                        (e.eVal === 0 ? "No Value" : `${e.eVal} €`),
-                        selectedCurrency === "USD" ? 
-                        formatNumber(e.usd)
-                        : 
-                        formatNumber(e.eur),
-                      
-                    ])}
-                    header={[
-                        <span>Token</span>,
-                        <span>Balance</span>,
-                        <span>Value</span>,
-                        <span>Price</span>,
-                    ]}
-                />
+                {renderTable(tokensData.legit)}
               </div>
-  
+
               <div style={{ display: activeTab === 2 ? 'block' : 'none' }}>
-              <Table 
-                    pageSize={6}
-                    noPagination="true"
-                    style={{ width: 'auto' }}
-                    columnsConfig='auto auto auto auto'
-                    data={tokensData.spam.map((e) => [
-                      e.symbol, 
-                      e.bal, 
-                      selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
-                        : 
-                        (e.eVal === 0 ? "No Value" : `${e.eVal} €`),
-                        selectedCurrency === "USD" ? 
-                        formatNumber(e.usd)
-                        : 
-                        formatNumber(e.eur),
-                      
-                    ])}
-                    header={[
-                        <span>Token</span>,
-                        <span>Balance</span>,
-                        <span>Value</span>,
-                        <span>Price</span>,
-                    ]}
-                />
+                {renderTable(tokensData.spam)}
               </div>
-  
+
               <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
-              <Table 
-                    pageSize={6}
-                    noPagination="true"
-                    style={{ width: 'auto' }}
-                    columnsConfig='auto auto auto auto'
-                    data={tokensData.all.map((e) => [
-                      e.symbol, 
-                      e.bal, 
-                      selectedCurrency === "USD" ? 
-                        (e.dVal === 0 ? "No Value" : `$${e.dVal}`) 
-                        : 
-                        (e.eVal === 0 ? "No Value" : `€${e.eVal}`),
-                        selectedCurrency === "USD" ? 
-                        formatNumber(e.usd)
-                        : 
-                        formatNumber(e.eur),
-                      
-                    ])}
-                    header={[
-                        <span>Token</span>,
-                        <span>Balance</span>,
-                        <span>Value</span>,
-                        <span>Price</span>,
-                    ]}
-                />
-            </div>
+                {renderTable(tokensData.all)}
+              </div>
           </>
         )
       )}
