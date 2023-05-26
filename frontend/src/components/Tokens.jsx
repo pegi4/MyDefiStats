@@ -14,9 +14,9 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
       if (!num) return "No Price";
       if (num < 0.1) {
         let precision = Math.ceil(Math.abs(Math.log10(num))) + 1;
-        return `${symbol} ${num.toFixed(precision)}`;
+        return `${symbol}${num.toFixed(precision)}`;
       }
-      return `${symbol} ${num.toFixed(2)}`;
+      return `${symbol}${num.toFixed(2)}`;
     }
     
   
@@ -118,9 +118,9 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">
                         {selectedCurrency === "USD" ? 
-                          (e.dVal === 0 ? "No Value" : `${e.dVal} $`) 
+                          (e.dVal === 0 ? "No Value" : `$${e.dVal}`) 
                           : 
-                          (e.eVal === 0 ? "No Value" : `${e.eVal} €`)}
+                          (e.eVal === 0 ? "No Value" : `€${e.eVal}`)}
                       </td>
                       <td className="py-3 px-6 text-left">
                         {selectedCurrency === "USD" ? 

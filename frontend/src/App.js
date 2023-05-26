@@ -36,6 +36,16 @@ function App() {
     console.log("Switch currency to: ", selectedCurrency)
   };
 
+  // function to get chain symbol
+  const getChainSymbol = () => {
+    if (chain === '0x1') {
+      return 'ETH';
+    } else if (chain === '0x38') {
+      return 'BSC';
+    }
+    return ''; // Default case, handle other chains if needed
+  };
+
   useEffect(() => {
     localStorage.setItem('wallet', wallet);
   }, [wallet]);
@@ -74,41 +84,44 @@ function App() {
               />
             </div>
           </div>
-          <div className="currency-dropdown">
-            <div className="currency-selector">
-              <div className="currency-text">{selectedCurrency}</div>
+          <div className="selector-dropdown">
+            <div className="selector-selector">
+              <div className="selector-text">{selectedCurrency}</div>
               <div className="arrow-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12">
                   <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M1.621 3.19a.807.807 0 011.108 0L6 6.271 9.27 3.19a.807.807 0 011.109 1.175L6 8.5 1.621 4.364a.807.807 0 010-1.174z"></path>
                 </svg>
               </div>
             </div>
-            <div className="currency-options">
-              <button onClick={() => switchCurrency("USD")} className="currency-option" type="button">USD</button>
-              <button onClick={() => switchCurrency("EUR")} className="currency-option" type="button">EUR</button>
+            <div className="selector-options">
+              <button onClick={() => switchCurrency("USD")} className="selector-option" type="button">USD</button>
+              <button onClick={() => switchCurrency("EUR")} className="selector-option" type="button">EUR</button>
             </div>
           </div>
 
         </div>
         <div className="tab-select">
-        <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
-            <Tab>Tokens</Tab>
-            <Tab>NFTs</Tab>
-            <Tab>History</Tab>
-        </TabList>
+          <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
+              <Tab>Tokens</Tab>
+              <Tab>NFTs</Tab>
+              <Tab>History</Tab>
+          </TabList>
 
-          <select
-            value={chain}
-            onChange={(e) => setChain(e.target.value)}
-            className="chain-selector"
-          >
-            <option value="0x1">
-              ETH
-            </option>
-            <option value="0x38">
-              BSC
-            </option>
-          </select>
+          <div className="selector-dropdown">
+            <div className="selector-selector">
+              <div className="selector-text">{getChainSymbol()}</div>
+              <div className="arrow-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12">
+                  <path fill="currentColor" fillRule="evenodd" clipRule="evenodd" d="M1.621 3.19a.807.807 0 011.108 0L6 6.271 9.27 3.19a.807.807 0 011.109 1.175L6 8.5 1.621 4.364a.807.807 0 010-1.174z"></path>
+                </svg>
+              </div>
+            </div>
+            <div className="selector-options">
+              <button onClick={(e) => setChain(e.target.value)} value="0x1" className="selector-option" type="button">ETH</button>
+              <button onClick={(e) => setChain(e.target.value)} value="0x38" className="selector-option" type="button">BSC</button>
+            </div>
+          </div>
+
         </div>
 
         {/* Render the components conditionally, but don't unmount them when not active */}

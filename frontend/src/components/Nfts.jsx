@@ -82,10 +82,6 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
     
     return (
     <>
-        <div className='tabHeading'>
-            NFT Portfolio
-        </div>
-
         <div className='filters'>
             <Input 
                 id="NameF"

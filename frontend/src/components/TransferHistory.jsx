@@ -51,7 +51,6 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
 
   return (
     <>
-      <div className="tabHeading">Transfer History</div>
       <div className="transactions-container">
         {isLoading ? (
           <ReactLoading type="cylon" color="#687994" height={100} width={50} />
