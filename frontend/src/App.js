@@ -81,6 +81,7 @@ function App() {
                 setTokensData={setTokensData}
                 selectedCurrency={selectedCurrency}
                 setSelectedCurrency={setSelectedCurrency}
+                wallet={wallet}
               />
             </div>
           </div>

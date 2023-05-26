@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import ReactLoading from "react-loading";
 
-function PortfolioValue({tokens, selectedCurrency}) {
+function PortfolioValue({tokens, selectedCurrency, wallet}) {
 
     const [totalValue, setTotalValue] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+
+        setIsLoading(true);
 
         let val = 0;
 
@@ -24,12 +27,22 @@ function PortfolioValue({tokens, selectedCurrency}) {
             setTotalValue(val.toFixed(2));
         }
 
+        setIsLoading(false);
+
     }, [tokens, selectedCurrency])
+
+    useEffect(() => {
+        setIsLoading(true);
+    }, [wallet]);
 
     return (
     <div className='portfolio'>
         <h2>
-            {totalValue === 0 ? <ReactLoading type="cylon" color="#687994" height={100} width={50} /> : (selectedCurrency === "USD" ? "$" : "€") + totalValue}
+            {isLoading ? 
+            <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
+            : 
+            (selectedCurrency === "USD" ? "$" : "€") + totalValue
+            }
         </h2>
     </div>
     )
