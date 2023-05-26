@@ -90,7 +90,6 @@ function App() {
           </div>
 
         </div>
-
         <div className="tab-select">
         <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
             <Tab>Tokens</Tab>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
-import { Table, TabList, Tab } from '@web3uikit/core';
+import { Table } from '@web3uikit/core';
 import ReactLoading from "react-loading";
+import TabList from './TabList';
+import Tab from './Tab';
 
 function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
 
@@ -104,14 +106,10 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         ) : (
           tokensData?.all?.length > 0 && (
             <>
-              <TabList
-                onChange={(selectedKey) => {
-                  console.log("Tokens tab:", selectedKey);
-                  setActiveTab(selectedKey);
-                }}>
-                <Tab tabKey={1} tabName={"Legit"} />
-                <Tab tabKey={2} tabName={"Spam"} />
-                <Tab tabKey={3} tabName={"All"} />
+              <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
+                  <Tab>Legit</Tab>
+                  <Tab>Spam</Tab>
+                  <Tab>All</Tab>
               </TabList>
   
               {/* Render the components conditionally, but don't unmount them when not active */}
