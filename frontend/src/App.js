@@ -58,7 +58,7 @@ function App() {
         <div className="blockie">
           <div className="blockie-content">
             <div rounded-md>
-              <Blockie seed={wallet} scale={14} />
+              <Blockie className='rounded-2xl' seed={wallet} scale={14} />
             </div>
             <div className="wallet-info">
               <p className="wallet-address">{wallet}</p>
@@ -87,7 +87,7 @@ function App() {
           </div>
 
         </div>
-        
+
         <div className="tab-select">
           <TabList
             onChange={(selectedKey) => {
