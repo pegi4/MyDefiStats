@@ -3,10 +3,13 @@ import Tokens from './components/Tokens';
 import Porfolio from './components/PortfolioValue';
 import TransferHistory from './components/TransferHistory';
 import Nfts from './components/Nfts';
+import TabList from './components/TabList';
+import Tab from './components/Tab';
+
 import './App.css';
 
 import { useState, useEffect } from 'react';
-import { TabList, Tab} from '@web3uikit/core';
+
 import Blockie from 'react-blockies';
 
 function App() {
@@ -89,16 +92,11 @@ function App() {
         </div>
 
         <div className="tab-select">
-          <TabList
-            onChange={(selectedKey) => {
-              console.log("Selected tab:", selectedKey);
-              setActiveTab(selectedKey);
-            }}
-          >
-            <Tab tabKey={1} tabName={"Tokens"} />
-            <Tab tabKey={2} tabName={"NFTs"} />
-            <Tab tabKey={3} tabName={"History"} />
-          </TabList>
+        <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
+            <Tab>Tokens</Tab>
+            <Tab>NFTs</Tab>
+            <Tab>History</Tab>
+        </TabList>
 
           <select
             value={chain}
@@ -115,7 +113,7 @@ function App() {
         </div>
 
         {/* Render the components conditionally, but don't unmount them when not active */}
-        <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
+        <div style={{ display: activeTab === 1 ? 'block' : 'none' }} className={activeTab === 2 ? 'fade-in' : ''}>
           <Tokens
             wallet={wallet}
             chain={chain}
@@ -126,7 +124,7 @@ function App() {
           />
         </div>
 
-        <div style={{ display: activeTab === 2 ? 'block' : 'none' }}>
+        <div style={{ display: activeTab === 2 ? 'block' : 'none' }} className={activeTab === 2 ? 'fade-in' : ''}>
           <Nfts
             wallet={wallet}
             chain={chain}
@@ -137,7 +135,7 @@ function App() {
           />
         </div>
 
-        <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
+        <div style={{ display: activeTab === 3 ? 'block' : 'none' }} className={activeTab === 2 ? 'fade-in' : ''}>
           <TransferHistory
             wallet={wallet}
             chain={chain}
