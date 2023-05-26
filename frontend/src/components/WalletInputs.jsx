@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { utils } from 'web3';
 import Autosuggest from 'react-autosuggest';
-import { Blockie } from '@web3uikit/web3';
+import Blockie from 'react-blockies';
 import { configureChains, WagmiConfig, createConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { mainnet } from 'wagmi/chains';
@@ -49,7 +49,7 @@ function WalletInputs({ wallet, setWallet }) {
 
   const renderSuggestion = (suggestion) => (
     <div className="suggestion-item">
-      <Blockie seed={suggestion} size={10} scale={3} />
+      <Blockie className='rounded-2xl' seed={suggestion} size={10} scale={3} />
       <span>{suggestion}</span>
     </div>
   );

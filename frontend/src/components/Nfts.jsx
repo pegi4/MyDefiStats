@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
-import { Input } from '@web3uikit/core';
+import Input from './Input';
 import '../App.css';
 
 function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
@@ -89,21 +89,18 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
         <div className='filters'>
             <Input 
                 id="NameF"
-                label="Name Filter"
-                labelBgColor="rgb(33, 33, 38)"
+                placeholder="Name"
                 value={nameFilter}
-                style={{}}
                 onChange={(e) => setNameFilter(e.target.value)}
             />
             <Input 
                 id="IdF"
-                label="Id Filter"
-                labelBgColor="rgb(33, 33, 38)"
+                placeholder="ID"
                 value={idFilter}
-                style={{}}
                 onChange={(e) => setIdFilter(e.target.value)}
             />
         </div>
+
         <div className='nftList'>
                 {filteredNfts.length > 0 && filteredNfts.map((e) => {
                     return (
