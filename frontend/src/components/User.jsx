@@ -1,10 +1,6 @@
 import axios from "axios";
-import { useState } from 'react';
 
-export default function User({ session, onLogout, setWallet }) {
-
-  // Wallet connection status
-  const [walletConnected, setWalletConnected] = useState(false);
+export default function User({ session, onLogout, setWallet, walletConnected, setWalletConnected }) {
 
   async function signOut() {
     await axios(`${process.env.REACT_APP_SERVER_URL}/logout`, {

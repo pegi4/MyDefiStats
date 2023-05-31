@@ -70,7 +70,7 @@ function App() {
 
         <div className="blockie">
           <div className="blockie-content">
-            <div rounded-md>
+            <div>
               <Blockie className='rounded-2xl' seed={wallet} scale={14} />
             </div>
             <div className="wallet-info">

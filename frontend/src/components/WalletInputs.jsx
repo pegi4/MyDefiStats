@@ -29,6 +29,9 @@ function WalletInputs({ wallet, setWallet }) {
   //const web3 = new Web3();
   const [session, setSession] = useState(null);
 
+  // Wallet connection status
+  const [walletConnected, setWalletConnected] = useState(false);
+
   const isValidWalletAddress = (value) => {
     return utils.isAddress(value);
   };
@@ -64,16 +67,18 @@ function WalletInputs({ wallet, setWallet }) {
 
   // Check if user is authenticated when the app loads
   useEffect(() => {
-    axios(`${process.env.REACT_APP_SERVER_URL}/authenticate`, {
-      withCredentials: true,
-    })
-      .then(({ data }) => {
-        setSession(data);
+    if (walletConnected) {
+      axios(`${process.env.REACT_APP_SERVER_URL}/authenticate`, {
+        withCredentials: true,
       })
-      .catch((err) => {
-        setSession(null);
-      });
-  }, []);
+        .then(({ data }) => {
+          setSession(data);
+        })
+        .catch((err) => {
+          setSession(null);
+        });
+    }
+  }, [walletConnected]);
 
   return (
     <div className='header'>
@@ -101,6 +106,8 @@ function WalletInputs({ wallet, setWallet }) {
                 session={session}
                 onLogout={() => setSession(null)}
                 setWallet={setWallet}
+                walletConnected={walletConnected}
+                setWalletConnected={setWalletConnected}
             />
           ) : (
             <Signin onLogin={setSession} />
