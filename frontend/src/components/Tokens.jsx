@@ -112,8 +112,8 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                   </tr>
                 </thead>
                 <tbody className="text-white-600 text-sm font-semibold">
-                  {data.map((e) => (
-                    <tr className="hover:bg-neutral-600">
+                  {data.map((e, index) => (
+                    <tr className="hover:bg-neutral-600" key={e.symbol}>
                       <td className="py-3 px-6 text-left whitespace-nowrap">{e.symbol}</td>
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">
