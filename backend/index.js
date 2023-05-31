@@ -80,6 +80,8 @@ app.get('/nativeBalance', async (req, res) => {
 
     //console.log('nativePrice:', nativePrice);
 
+    nativeBalance.token_address = nativeCurrency;
+
     nativeBalance.symbol = nativePrice.jsonResponse.nativePrice.symbol;
 
     nativeBalance.usd = nativePrice.jsonResponse.usdPrice;

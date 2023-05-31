@@ -69,6 +69,7 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
             eVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.eur)).toFixed(2),
             usd: nativeBalanceData.usd,
             eur: nativeBalanceData.eur,
+            token_address: nativeBalanceData.token_address,
           };
 
           setTokensData({
@@ -97,6 +98,16 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         }
     }, [wallet, chain, getBalances]);
 
+    const redirectToTokenDetails = (token) => {
+      let redirectUrl = "";
+      if (chain === "0x38") {
+        redirectUrl = `https://dexscreener.com/bsc/${token.token_address}`;
+      } else if (chain === "0x1") {
+        redirectUrl = `https://dexscreener.com/ethereum/${token.token_address}`;
+      }
+      window.open(redirectUrl, "_blank");
+    };
+
     const renderTable = (data) => (
       <div className="overflow-x-auto">
         <div className="min-w-screen flex items-center justify-center font-sans overflow-hidden">
@@ -113,7 +124,7 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                 </thead>
                 <tbody className="text-white-600 text-sm font-semibold">
                   {data.map((e, index) => (
-                    <tr className="hover:bg-zinc-600" key={e.symbol}>
+                    <tr className="hover:bg-zinc-600" key={e.symbol} onClick={() => redirectToTokenDetails(e)}>
                       <td className="py-3 px-6 text-left whitespace-nowrap">{e.symbol}</td>
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">

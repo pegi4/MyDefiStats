@@ -49,6 +49,16 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
   }, []);
 
 
+  const getTransactionUrl = (transactionHash) => {
+    if (chain === "0x38") {
+      return `https://bscscan.com/tx/${transactionHash}`;
+    } else if (chain === "0x1") {
+      return `https://etherscan.io/tx/${transactionHash}`;
+    }
+    // Add more conditions for other chains if needed
+    return "";
+  };
+
   return (
     <>
       <div className="transactions-container">
@@ -59,8 +69,15 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
             <div className="transaction-group" key={group.date}>
               <div className="date-header">{group.date}</div>
               {group.transfers.map((transfer, index) => {
+                const transactionUrl = getTransactionUrl(transfer.transaction_hash);
                 return (
-                  <div className="transaction" key={`${transfer.transaction_hash}-${index}`}>
+                  <a
+                    href={transactionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transaction"
+                    key={`${transfer.transaction_hash}-${index}`}
+                  >
                     <div className="transaction-type">
                     {transfer.from_address.toLowerCase() === wallet.toLowerCase() ? "Sent" : "Received"}
                     </div>
@@ -76,7 +93,7 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
                         ? `To: ${transfer.to_address}`
                         : `From: ${transfer.from_address}`}
                     </div>
-                  </div>
+                  </a>
                 );
               })}
             </div>
