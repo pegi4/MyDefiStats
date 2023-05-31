@@ -101,10 +101,10 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
       <div className="overflow-x-auto">
         <div className="min-w-screen flex items-center justify-center font-sans overflow-hidden">
           <div className="w-full">
-            <div className="bg-neutral-700 shadow-md rounded-lg my-6 overflow-hidden">
-              <table className="min-w-max w-full table-auto">
+            <div className="bg-zinc-700 shadow-md rounded-lg my-6 overflow-hidden">
+              <table className="min-w-max w-full table-auto drop-shadow-md">
                 <thead>
-                  <tr className="bg-neutral-800 text-white-600 uppercase text-sm leading-normal">
+                  <tr className="bg-zinc-800 text-white-600 uppercase text-sm leading-normal">
                     <th className="py-3 px-6 text-left">Token</th>
                     <th className="py-3 px-6 text-left">Balance</th>
                     <th className="py-3 px-6 text-left">Value</th>
@@ -113,7 +113,7 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                 </thead>
                 <tbody className="text-white-600 text-sm font-semibold">
                   {data.map((e, index) => (
-                    <tr className="hover:bg-neutral-600" key={e.symbol}>
+                    <tr className="hover:bg-zinc-600" key={e.symbol}>
                       <td className="py-3 px-6 text-left whitespace-nowrap">{e.symbol}</td>
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">
