@@ -100,13 +100,11 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
         <div className='nftList'>
                 {filteredNfts.length > 0 && filteredNfts.map((e) => {
                     return (
-                        <>
-                            <div className='nftInfo'>
-                                {e.image && <img src={e.image} width={200} alt={e.name} />}
-                                <div>Name: {e.name}, </div>
-                                <div>ID: {e.token_id.slice(0,5)}</div>
-                            </div>
-                        </>
+                        <div className='nftInfo' key={e.token_id}>
+                            {e.image && <img src={e.image} width={200} alt={e.name} />}
+                            <div>Name: {e.name}, </div>
+                            <div>ID: {e.token_id.slice(0,5)}</div>
+                        </div>
                     )
                 })}
             </div>

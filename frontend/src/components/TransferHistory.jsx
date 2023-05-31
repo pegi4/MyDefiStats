@@ -58,9 +58,9 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
           groupedTransfers.map((group) => (
             <div className="transaction-group" key={group.date}>
               <div className="date-header">{group.date}</div>
-              {group.transfers.map((transfer) => {
+              {group.transfers.map((transfer, index) => {
                 return (
-                  <div className="transaction" key={transfer.transaction_hash}>
+                  <div className="transaction" key={`${transfer.transaction_hash}-${index}`}>
                     <div className="transaction-type">
                     {transfer.from_address.toLowerCase() === wallet.toLowerCase() ? "Sent" : "Received"}
                     </div>
