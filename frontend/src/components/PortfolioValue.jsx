@@ -24,7 +24,11 @@ function PortfolioValue({tokens, selectedCurrency, wallet}) {
                     }
                 }
             }
-            setTotalValue(val.toFixed(2));
+            const formatter = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+            });
+            setTotalValue(formatter.format(val));
         }
 
         setIsLoading(false);
