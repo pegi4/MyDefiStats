@@ -6,6 +6,24 @@ import "./TransferHistory.css";
 function TransferHistory({ chain, wallet, transfers, setTransfers }) {
   const [isLoading, setIsLoading] = useState(true);
 
+  const formatBalance = (balance) => {
+    if (balance === 0) {
+      return '0';
+    } else if (balance < 0.01 && balance > 0) {
+      let precision = Math.ceil(Math.abs(Math.log10(balance))) + 1;
+      return balance.toFixed(precision);
+    }
+  
+    // Check if the decimal part is zero
+    const decimalPart = balance - Math.floor(balance);
+    const formatter = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: decimalPart === 0 ? 0 : 2, // if decimal part = 0 then min 0 fraction digits otherwise 2
+      maximumFractionDigits: decimalPart === 0 ? 0 : 2, // if decimal part = 0 then max 0 fraction digits otherwise 2
+    });
+    
+    return formatter.format(balance);
+  };  
+
   const getTokenTransfers = useCallback(async () => {
     setIsLoading(true);
 
@@ -83,10 +101,10 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
                     </div>
                     <div className="token-amount">
                       {transfer.symbol}:{" "}
-                      {(
+                      {formatBalance(
                         Number(transfer.value) /
                         Number(`1e${transfer.decimals}`)
-                      ).toFixed(2)}
+                      )}
                     </div>
                     <div className="address">
                     {transfer.from_address.toLowerCase() === wallet.toLowerCase()

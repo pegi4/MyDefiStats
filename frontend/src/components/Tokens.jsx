@@ -16,10 +16,45 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         let precision = Math.ceil(Math.abs(Math.log10(num))) + 1;
         return `${symbol}${num.toFixed(precision)}`;
       }
-      return `${symbol}${num.toFixed(2)}`;
-    }
     
-  
+      // Check if the decimal part is zero
+      const decimalPart = num - Math.floor(num);
+      const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: decimalPart === 0 ? 0 : 2, // if decimal part = 0 then min 0 fraction digits otherwise 2
+        maximumFractionDigits: 2,
+      });
+      
+      return `${symbol}${formatter.format(num)}`;
+    };    
+    
+    const formatBalance = (balance) => {
+      if (balance < 0.001) {
+        let precision = Math.ceil(Math.abs(Math.log10(balance))) + 1;
+        return balance.toFixed(precision);
+      }
+      const decimalPart = balance - Math.floor(balance);
+      const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: decimalPart > 0 ? 2 : 0, // if decimal part > 0 then min 2 fraction digits otherwise 0
+        maximumFractionDigits: 2,
+      });
+      return formatter.format(balance);
+    };
+
+    const formatValue = (num) => {
+      if (num < 0.01) return `0.00`;
+      
+      // Check if the decimal part is zero
+      const decimalPart = num - Math.floor(num);
+      let decimals = decimalPart === 0 ? 0 : 2;
+    
+      // Number formatting
+      const formatter = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+      
+      return `${formatter.format(num)}`;
+    };
 
     const getBalances = useCallback(async () => {
       try {
@@ -51,27 +86,28 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
       
           const processTokens = (tokens) => {
             return tokens.map(t => {
-                let dVal = t.usd ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.usd)).toFixed(2) : 0;
-                let eVal = t.eur ? ((Number(t.balance) / Number(`1e${t.decimals}`)) * Number(t.eur)).toFixed(2) : 0;
-                return {
-                    ...t,
-                    bal: (Number(t.balance) / Number(`1e${t.decimals}`)).toFixed(2),
-                    dVal: dVal,
-                    eVal: eVal
-                };
+              let balance = Number(t.balance) / Number(`1e${t.decimals}`);
+              let dVal = t.usd ? (balance * Number(t.usd)).toFixed(2) : 0;
+              let eVal = t.eur ? (balance * Number(t.eur)).toFixed(2) : 0;
+              return {
+                  ...t,
+                  bal: formatBalance(balance),
+                  dVal: dVal,
+                  eVal: eVal
+              };
             });
-          }
+          };          
           
           let nb = {
             symbol: nativeBalanceData.symbol,
-            bal : (Number(nativeBalanceData.balance) / 1e18).toFixed(2),
+            bal: formatBalance(Number(nativeBalanceData.balance) / 1e18),
             dVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.usd)).toFixed(2),
             eVal: ((Number(nativeBalanceData.balance) / 1e18) * Number(nativeBalanceData.eur)).toFixed(2),
             usd: nativeBalanceData.usd,
             eur: nativeBalanceData.eur,
             token_address: nativeBalanceData.token_address,
           };
-
+        
           setTokensData({
             all: [nb, ...processTokens(all)],
             legit: [nb, ...processTokens(legit)],
@@ -129,9 +165,9 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">
                         {selectedCurrency === "USD" ? 
-                          (e.dVal === 0 ? "No Value" : `$${e.dVal}`) 
+                          (e.dVal === 0 ? "No Value" : `$${formatValue(e.dVal)}`) 
                           : 
-                          (e.eVal === 0 ? "No Value" : `€${e.eVal}`)}
+                          (e.eVal === 0 ? "No Value" : `€${formatValue(e.eVal)}`)}
                       </td>
                       <td className="py-3 px-6 text-left">
                         {selectedCurrency === "USD" ? 

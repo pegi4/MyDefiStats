@@ -222,7 +222,7 @@ app.get('/tokenTransfers', async (req, res) => {
       }
     } 
 
-    console.log(userTransDetails);
+    //console.log(userTransDetails);
     res.send(userTransDetails);
     console.log("Request succesful for transfers!");
 
