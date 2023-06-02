@@ -14,6 +14,8 @@ import Blockie from 'react-blockies';
 
 function App() {
 
+  console.log('App rendered');
+
   const [wallet, setWallet] = useState(localStorage.getItem('wallet') || "");
   const [chain, setChain] = useState(localStorage.getItem('chain') || "0x1");
 
@@ -48,10 +50,12 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('wallet', wallet);
+    console.log('Wallet changed!', wallet);
   }, [wallet]);
   
   useEffect(() => {
     localStorage.setItem('chain', chain);
+    console.log('Chain changed!', chain);
   }, [chain]);
 
   

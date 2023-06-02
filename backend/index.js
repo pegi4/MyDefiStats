@@ -171,9 +171,9 @@ app.get('/tokenBalances', async (req, res) => {
       });
       console.log("Request succesful for tokens!");
 
-      console.log("All Tokens: ", tokens);
-      console.log("Legit Tokens: ", legitTokens);
-      console.log("Spam Tokens: ", spamTokens);
+      //console.log("All Tokens: ", tokens);
+      //console.log("Legit Tokens: ", legitTokens);
+      //console.log("Spam Tokens: ", spamTokens);
   
     } catch (error) {
       console.log(error);
