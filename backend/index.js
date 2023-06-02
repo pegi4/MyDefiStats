@@ -138,6 +138,10 @@ app.get('/tokenBalances', async (req, res) => {
       });
   
       let tokens = response.jsonResponse;
+
+      const pricePromises = tokens.map((token) => getTokenPrice(token.token_address, chain));
+
+      const prices = await Promise.all(pricePromises);
   
       let legitTokens = [];
 
@@ -148,8 +152,7 @@ app.get('/tokenBalances', async (req, res) => {
       const conversionRate = conversionRateResponse.data.rates.EUR;
   
       for (let i = 0; i < tokens.length; i++) {
-        // Call getTokenPrice for each token
-        const price = await getTokenPrice(tokens[i].token_address, chain);
+        const price = prices[i];
 
         if(price) {
           tokens[i].usd = price;
