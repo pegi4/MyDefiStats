@@ -33,8 +33,8 @@ function App() {
   const [activeTab, setActiveTab] = useState(1);
 
   // function to switch currency
-  const switchCurrency = () => {
-    setSelectedCurrency(selectedCurrency === "USD" ? "EUR" : "USD");
+  const switchCurrency = (c) => {
+    setSelectedCurrency(c);
     console.log("Switch currency to: ", selectedCurrency)
   };
 
