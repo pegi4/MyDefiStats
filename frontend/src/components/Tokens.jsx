@@ -175,7 +175,7 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
                 </thead>
                 <tbody className="text-white-600 text-sm font-semibold">
                   {data.map((e, index) => (
-                    <tr className="hover:bg-zinc-600" key={e.symbol} onClick={() => redirectToTokenDetails(e)}>
+                    <tr className="hover:bg-zinc-500" key={e.symbol} onClick={() => redirectToTokenDetails(e)}>
                       <td className="py-3 px-6 text-left whitespace-nowrap">{e.symbol}</td>
                       <td className="py-3 px-6 text-left">{e.bal}</td>
                       <td className="py-3 px-6 text-left">
