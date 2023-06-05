@@ -83,40 +83,44 @@ function TransferHistory({ chain, wallet, transfers, setTransfers }) {
         {isLoading ? (
           <ReactLoading type="cylon" color="#687994" height={100} width={50} />
         ) : (
-          groupedTransfers.map((group) => (
-            <div className="transaction-group" key={group.date}>
-              <div className="date-header">{group.date}</div>
-              {group.transfers.map((transfer, index) => {
-                const transactionUrl = getTransactionUrl(transfer.transaction_hash);
-                return (
-                  <a
-                    href={transactionUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transaction"
-                    key={`${transfer.transaction_hash}-${index}`}
-                  >
-                    <div className="transaction-type">
-                    {transfer.from_address.toLowerCase() === wallet.toLowerCase() ? "Sent" : "Received"}
-                    </div>
-                    <div className="token-amount">
-                      {transfer.symbol}:{" "}
-                      {formatBalance(
-                        Number(transfer.value) /
-                        Number(`1e${transfer.decimals}`)
-                      )}
-                    </div>
-                    <div className="address">
-                    {transfer.from_address.toLowerCase() === wallet.toLowerCase()
-                        ? `To: ${transfer.to_address}`
-                        : `From: ${transfer.from_address}`}
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
+          groupedTransfers.length === 0 ? (
+            <p>You don't have any record on this chain.</p>
+          ) : (
+            groupedTransfers.map((group) => (
+              <div className="transaction-group" key={group.date}>
+                <div className="date-header">{group.date}</div>
+                {group.transfers.map((transfer, index) => {
+                  const transactionUrl = getTransactionUrl(transfer.transaction_hash);
+                  return (
+                    <a
+                      href={transactionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transaction"
+                      key={`${transfer.transaction_hash}-${index}`}
+                    >
+                      <div className="transaction-type">
+                      {transfer.from_address.toLowerCase() === wallet.toLowerCase() ? "Sent" : "Received"}
+                      </div>
+                      <div className="token-amount">
+                        {transfer.symbol}:{" "}
+                        {formatBalance(
+                          Number(transfer.value) /
+                          Number(`1e${transfer.decimals}`)
+                        )}
+                      </div>
+                      <div className="address">
+                      {transfer.from_address.toLowerCase() === wallet.toLowerCase()
+                          ? `To: ${transfer.to_address}`
+                          : `From: ${transfer.from_address}`}
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            ))
           ))
-        )}
+        }
       </div>
     </>
   );

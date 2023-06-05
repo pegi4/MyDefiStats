@@ -28,7 +28,10 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
     };    
     
     const formatBalance = (balance) => {
-      if (balance < 0.001) {
+      if (balance === 0) {
+        return "0.00";
+      }
+      else if (balance < 0.001) {
         let precision = Math.ceil(Math.abs(Math.log10(balance))) + 1;
         return balance.toFixed(precision);
       }
@@ -38,7 +41,7 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         maximumFractionDigits: 2,
       });
       return formatter.format(balance);
-    };
+    };    
 
     const formatValue = (num) => {
       if (num < 0.01) return `0.00`;
@@ -108,13 +111,20 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
             token_address: nativeBalanceData.token_address,
           };
         
-          setTokensData({
-            all: [nb, ...processTokens(all)],
-            legit: [nb, ...processTokens(legit)],
-            spam: processTokens(spam),
-          });
+          if(nb.bal > 0) {
+            setTokensData({
+              all: [nb, ...processTokens(all)],
+              legit: [nb, ...processTokens(legit)],
+              spam: processTokens(spam),
+            });
+          }
           
-      
+        } else {
+          setTokensData({
+            all: [],
+            legit: [],
+            spam: [],
+          });
         }
 
         setIsLoading(false);
@@ -128,11 +138,16 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
     useEffect(() => {
         if(wallet){
             setIsLoading(true);
+            setTokensData({
+              all: [],
+              legit: [],
+              spam: [],
+            });
             getBalances().catch((err) => {
                 console.error(err);
             });
         }
-    }, [wallet, chain, getBalances]);
+    }, [wallet, chain, getBalances, setTokensData]);
 
     const redirectToTokenDetails = (token) => {
       let redirectUrl = "";
@@ -191,14 +206,14 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
         {isLoading ? (
           <ReactLoading type="cylon" color="#687994" height={100} width={50} /> 
         ) : (
-          tokensData?.all?.length > 0 && (
+          tokensData?.all?.length > 0 ? (
             <>
               <TabList onTabChange={(selectedKey) => {setActiveTab(selectedKey + 1); console.log("Selected tab:", selectedKey);}}>
                   <Tab>Legit</Tab>
                   <Tab>Spam</Tab>
                   <Tab>All</Tab>
               </TabList>
-  
+
               <div style={{ display: activeTab === 1 ? 'block' : 'none' }}>
                 {renderTable(tokensData.legit)}
               </div>
@@ -210,12 +225,14 @@ function Tokens({chain, wallet, tokensData, setTokensData, selectedCurrency}) {
               <div style={{ display: activeTab === 3 ? 'block' : 'none' }}>
                 {renderTable(tokensData.all)}
               </div>
-          </>
-        )
-      )}
+            </>
+          ) : (
+            <div className="noDataMessage">You don't have any tokens on this chain.</div>
+          )
+        )}
     </>
   )
 
 }
 
-export default React.memo(Tokens);
+export default Tokens;

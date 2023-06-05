@@ -7,6 +7,7 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
 
     const [nameFilter, setNameFilter] = useState("");
     const [idFilter, setIdFilter] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
     
@@ -58,6 +59,7 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
     }, [setNfts, setFilteredNfts]);
 
     const getUserNfts = useCallback(async () => {
+        setLoading(true);
         const response = await axios.get("http://localhost:5000/nftBalance", {
             params: {
                 address: wallet,
@@ -68,6 +70,7 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
         if (response.data.result) {
             nftProcessing(response.data.result);
         }
+        setLoading(false);
     
     }, [wallet, chain, nftProcessing]);
     
@@ -81,35 +84,45 @@ function Nfts({chain, wallet, nfts, setNfts, filteredNfts, setFilteredNfts}) {
     
     
     return (
-    <>
-        <div className='filters'>
-            <Input 
-                id="NameF"
-                placeholder="Name"
-                value={nameFilter}
-                onChange={(e) => setNameFilter(e.target.value)}
-            />
-            <Input 
-                id="IdF"
-                placeholder="ID"
-                value={idFilter}
-                onChange={(e) => setIdFilter(e.target.value)}
-            />
-        </div>
-
-        <div className='nftList'>
-                {filteredNfts.length > 0 && filteredNfts.map((e) => {
-                    return (
-                        <div className='nftInfo' key={e.token_id}>
-                            {e.image && <img src={e.image} width={200} alt={e.name} />}
-                            <div>Name: {e.name}, </div>
-                            <div>ID: {e.token_id.slice(0,5)}</div>
-                        </div>
-                    )
-                })}
+        <>
+            {
+                !loading && filteredNfts.length !== 0 && (
+                    <div className='filters'>
+                        <Input 
+                            id="NameF"
+                            placeholder="Name"
+                            value={nameFilter}
+                            onChange={(e) => setNameFilter(e.target.value)}
+                        />
+                        <Input 
+                            id="IdF"
+                            placeholder="ID"
+                            value={idFilter}
+                            onChange={(e) => setIdFilter(e.target.value)}
+                        />
+                    </div>
+                )
+            }
+    
+            <div className='nftList'>
+                {
+                    // If there are no NFTs
+                    !loading && filteredNfts.length === 0
+                        ? <p>You don't have any NFTs on this chain.</p>
+                        // Display the list of NFTs
+                        : filteredNfts.map((e) => {
+                            return (
+                                <div className='nftInfo' key={e.token_id}>
+                                    {e.image && <img src={e.image} width={200} alt={e.name} />}
+                                    <div>Name: {e.name}, </div>
+                                    <div>ID: {e.token_id.slice(0,5)}</div>
+                                </div>
+                            )
+                        })
+                }
             </div>
-    </>
-  )
+        </>
+    )    
 }
 
 export default Nfts
