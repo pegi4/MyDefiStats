@@ -16,7 +16,7 @@ function App() {
   console.log("App rendered");
 
   const [wallet, setWallet] = useState(localStorage.getItem("wallet") || "");
-  const [chain, setChain] = useState(localStorage.getItem("chain") || "0x1");
+  const [chain, setChain] = useState(localStorage.getItem("chain") || "0x38");
 
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
 
@@ -192,19 +192,19 @@ function App() {
                 <div className="selector-options">
                   <button
                     onClick={(e) => setChain(e.target.value)}
-                    value="0x1"
-                    className="selector-option"
-                    type="button"
-                  >
-                    ETH
-                  </button>
-                  <button
-                    onClick={(e) => setChain(e.target.value)}
                     value="0x38"
                     className="selector-option"
                     type="button"
                   >
                     BSC
+                  </button>
+                  <button
+                    onClick={(e) => setChain(e.target.value)}
+                    value="0x1"
+                    className="selector-option"
+                    type="button"
+                  >
+                    ETH
                   </button>
                 </div>
               </div>
