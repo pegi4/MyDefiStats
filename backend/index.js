@@ -175,12 +175,12 @@ app.get('/tokenBalances', async (req, res) => {
       });
       console.log("Request succesful for tokens!");
 
-      console.log("All Tokens: ", tokens);
+/*       console.log("All Tokens: ", tokens);
       console.log("Legit Tokens: ", legitTokens);
-      console.log("Spam Tokens: ", spamTokens);
+      console.log("Spam Tokens: ", spamTokens); */
   
     } catch (error) {
-      console.log(error);
+      console.log("Error for tokens", error);
     }
 });
 
@@ -190,49 +190,63 @@ app.get('/tokenTransfers', async (req, res) => {
 
   console.log("Request received for transfers!");
 
-  try {
-
-    const { address, chain } = req.query;
-
-    const response = await Moralis.EvmApi.token.getWalletTokenTransfers({
-      address: address,
-      chain: chain,
-    });
-
-    
-    const userTrans = response.jsonResponse;
-
-    //console.log(userTrans.result.address);
-    //res.send(userTrans.result);
-    
-    let userTransDetails = [];
-
-    for (let i = 0; i < userTrans.result.length; i++) {
-
-      const metaResponse = await Moralis.EvmApi.token.getTokenMetadata({
-        addresses: [userTrans.result[i].address],
+  const { address, chain } = req.query;
+  let response;
+  let attempts = 0;
+  while (true) {
+    try {
+      response = await Moralis.EvmApi.token.getWalletTokenTransfers({
+        address: address,
         chain: chain,
       });
-
-      //console.log(`Token address: ${userTrans.result[i].address}`);
-      //console.log(metaResponse);
-
-      if(metaResponse.jsonResponse) {
-        userTrans.result[i].decimals = metaResponse.jsonResponse[0].decimals;
-        userTrans.result[i].symbol = metaResponse.jsonResponse[0].symbol;
-        userTransDetails.push(userTrans.result[i]);
+      break;
+    } catch (error) {
+      if (error.code === 'C0006' && error.details.status === 429) {
+        attempts++;
+        console.log(`Rate limit exceeded. Retrying in ${Math.pow(2, attempts) * 1000} ms...`);
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts) * 1000));
       } else {
-        console.log("No details for coin");
+        throw error;
       }
-    } 
-
-    //console.log(userTransDetails);
-    res.send(userTransDetails);
-    console.log("Request succesful for transfers!");
-
-  } catch (error) {
-    console.log(error);
+    }
   }
+
+  const userTrans = response.jsonResponse;
+
+  let userTransDetails = [];
+
+  for (let i = 0; i < userTrans.result.length; i++) {
+    attempts = 0;
+    let metaResponse;
+    while (true) {
+      try {
+        metaResponse = await Moralis.EvmApi.token.getTokenMetadata({
+          addresses: [userTrans.result[i].address],
+          chain: chain,
+        });
+        break;
+      } catch (error) {
+        if (error.code === 'C0006' && error.details.status === 429) {
+          attempts++;
+          console.log(`Rate limit exceeded. Retrying in ${Math.pow(2, attempts) * 1000} ms...`);
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts) * 1000));
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    if(metaResponse.jsonResponse) {
+      userTrans.result[i].decimals = metaResponse.jsonResponse[0].decimals;
+      userTrans.result[i].symbol = metaResponse.jsonResponse[0].symbol;
+      userTransDetails.push(userTrans.result[i]);
+    } else {
+      console.log("No details for coin");
+    }
+  }
+
+  res.send(userTransDetails);
+  console.log("Request successful for transfers!");
 });
 
 
