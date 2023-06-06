@@ -80,12 +80,18 @@ function App() {
             setWallet={setWallet}
           />
 
-          <div className="starting-content">
+          <div className="starting-content bg-zinc-700">
             <h2>Welcome to Defi Stats!</h2>
-            <p>Here you can see your wallet balance, your NFTs and past transactions</p>
-            <p>Input the wallet address or connect with you wallet to see wallett stats</p>
+            <p>Here you can see your wallet balance, your NFTs, and past transactions.</p>
+            <p>Enter a wallet address or connect with your wallet above.</p>
+            <p>Feel free, if you want to test how it works.</p>
+            <button 
+              className="bg-zinc-500 hover:bg-zinc-400 text-white font-bold mt-4 px-4 rounded"
+              onClick={() => setWallet('0x868E247462F6e1e7F3eE3aDE27aB5b11374fdb70')}
+            >
+              Try it
+            </button>
           </div>
-
         </div>
       ) : (
         <div>
